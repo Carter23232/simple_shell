@@ -3,10 +3,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "mystd_f.h"
+#include "printf.h"
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <dirent.h>
+
 /**
  * struct double_return - returns double variables
  * @buf: string
@@ -19,21 +21,21 @@ typedef struct double_return
 	int val;
 } d_ret;
 d_ret get_command(char *env[]);
-char **token(char *buffer);
-int len_per_word(const char *string, size_t pos);
+char **token(char ***sorted_array, char *buffer, char key);
+int len_per_word(const char *string, size_t pos, char key);
 char  *removeSpacesFromStr(char *str);
 void Error_msg(const char *msg);
 void execute(int ac, char **argv,char **env);
-char *get_path(const char *input);
+char *get_path(const char *input, char **env);
 int test_dir(const char *arg);
-char *arg_ind_zero(char *input);
+void arg_ind_zero(char **input, char **env);
 void free_str_arr(char **arr);
-int get_num_of_words(char *buffer);
-void ext(int status, int *toggle);
-void set_env(const char **arr, int *toggle, pid_t *child);
-void unset_env(const char **arr, int *toggle, pid_t *child);
+int get_num_of_words(char *buffer, char key);
+void ext(int status);
+void set_env(const char **arr);
+void unset_env(const char **arr);
 char *_getenv(char *env[], char *str);
-int envs_unset(char **env);
-void change_d(const char **arr, int *toggle, char **previous_dir, pid_t *child, char *env[]);
+void change_d(const char **arr, char **previous_dir, char *env[]);
+int  built_in (int *status, char **arr ,char *buf, char *env[]);
 int trailing_space(d_ret out);
 #endif

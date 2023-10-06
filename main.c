@@ -8,7 +8,8 @@
  */
 int main(int ac, char **argv, char *env[])
 {
-	(void)ac, (void)argv;
+
+	(void)argv;
 	execute(ac, argv, env);
 	return (0);
 }

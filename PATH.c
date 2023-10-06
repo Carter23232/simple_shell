@@ -17,25 +17,20 @@ int test_dir(const char *arg)
  * @input: string to modify
  * Return: modified string
  */
-char *arg_ind_zero(char *input)
+void arg_ind_zero(char **input, char **env)
 {
-	char *generated_path;
 	int i = 0, is_path = 0;
 
 	if (input == NULL)
-		return (NULL);
-	while (input[i] != '\0')
+		return;
+	while ((*input)[i] != '\0')
 	{
-		if ((input[i]) == '/')
+		if ((*input)[i] == '/')
 			is_path = 1;
 		i++;
 	}
 	if (!(is_path))
-	{
-		generated_path = get_path(input);
-		return (generated_path);
-	}
-	return (input);
+		*input = get_path(*input, env);
 }
 
 /**
@@ -43,18 +38,17 @@ char *arg_ind_zero(char *input)
  * @input: string to lookup
  * Return: path to the file if found
  */
-char *get_path(const char *input)
+char *get_path(const char *input, char **env)
 {
-	char *func_path[] = {"/usr/local/sbin/",
-			     "/usr/local/bin/", "/usr/sbin/", "/usr/bin/",
-			     "/sbin/", "/bin/", NULL};
-	char *path = NULL;
+	char **func_path = NULL;
+	char *path = NULL, *addr_path, *var_path, *fw_slash;
 	unsigned int i = 0, len_arr;
 	DIR *dir;
 	struct dirent *entry;
 
-	if (input == NULL)
+	if (input == NULL && func_path == NULL && env == NULL)
 		return (NULL);
+	token(&func_path, var_path = _getenv(env, "PATH"),':');
 
 	while (func_path[i] != NULL)
 	{
@@ -65,22 +59,22 @@ char *get_path(const char *input)
 		{
 			if (_strcmp(input, entry->d_name) == 0)
 			{
-				len_arr = (_strlen(input) + _strlen(func_path[i]));
+				len_arr = (_strlen(func_path[i]));
 				path = malloc(sizeof(char) * (len_arr + 1));
 				if (path == NULL)
 				{
-					free(path);
+					free_ifnf("s", path);
 					return (NULL);
 				}
-				_strcpy(path, func_path[i]), _strcat(path, input);
-				path[len_arr] = '\0';
+				_strcpy(path, func_path[i]), addr_path = _strcat(fw_slash = _strcat(path, "/"), input);
+				free_ifnf("sssa", path, var_path, fw_slash, func_path);
 				closedir(dir);
-				return (path);
+				return (addr_path);
 			}
 		}
 		closedir(dir);
 		i++;
 	}
-	free(path);
+	free_ifnf("ssa", path, var_path, func_path);
 	return (NULL);
 }

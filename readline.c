@@ -15,16 +15,16 @@ d_ret get_command(char *env[])
 	stream.buf = NULL;
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
-		printf("Welcome back %s :~%s_$ ", usr = _getenv(env, "USERNAME"), pwd = _getenv(env, "PWD"));
+		_printf("Welcome back %s :~%s_$ ", usr = _getenv(env, "USERNAME"), pwd = _getenv(env, "PWD"));
 	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
 	if (stream.val == -1)
-		free(stream.buf);
+		free_ifnf("s", stream.buf);
 	if (stream.val == -1 && interactive == 1)
 		Error_msg(Err_msg);
 	if (stream.val != -1)
 		stream.buf[_strlen(stream.buf) - 1] = '\0';
-	free(pwd);
-	free(usr);
+	free_ifnf("s", pwd);
+	free_ifnf("s", usr);
 	return (stream);
 }
 /**
@@ -65,7 +65,7 @@ char *removeSpacesFromStr(char *string)
  * @buffer: input string
  * Return: number of words
  */
-int get_num_of_words(char *buffer)
+int get_num_of_words(char *buffer, char key)
 {
 	int n_of_words = 1;
 
@@ -73,7 +73,7 @@ int get_num_of_words(char *buffer)
 		return (0);
 	while (*buffer != '\0')
 	{
-		if (*buffer == ' ')
+		if (*buffer == key)
 		{
 			n_of_words++;
 		}
@@ -87,16 +87,16 @@ int get_num_of_words(char *buffer)
  * @pos: current position of iterator
  * Return: number of characters in a word
  */
-int len_per_word(const char *str, size_t pos)
+int len_per_word(const char *str, size_t pos, char key)
 {
 	int len = 0;
 
 	while (str[pos] != '\0')
 	{
-		if (str[pos] != ' ')
+		if (str[pos] != key)
 			len++;
 		pos++;
-		if (str[pos] == ' ')
+		if (str[pos] == key)
 			break;
 	}
 	return (len);
@@ -106,40 +106,39 @@ int len_per_word(const char *str, size_t pos)
  * @buffer: input string
  * Return: array of token
  */
-char **token(char *buffer)
+char **token(char ***sorted_array, char *buffer, char key)
 {
-	char **sorted_array = NULL;
 	char *mem_E_msg = "memory allocation failed\n";
-	int index_array = 0, no_words = get_num_of_words(buffer);
+	int index_array = 0, no_words = get_num_of_words(buffer, key);
 	size_t i, buf_len, sorted_index = 0, len;
 
-	if (buffer == NULL)
+	if (buffer == NULL && *sorted_array != NULL)
 		return (NULL);
 	buf_len = _strlen(buffer);
-	sorted_array = malloc(sizeof(char *) * (no_words + 1));
-	if (sorted_array  == NULL)
+	(*sorted_array) = malloc(sizeof(char *) * (no_words + 1));
+	if ((*sorted_array)  == NULL)
 		Error_msg(mem_E_msg);
-	len = len_per_word(buffer, 0);
+	len = len_per_word(buffer, 0, key);
 	for (i = 0; i < buf_len; i++)
 	{
-		sorted_array[index_array] = malloc((sizeof(char) * (len + 1)));
-		if (sorted_array[index_array] == NULL)
+		(*sorted_array)[index_array] = malloc((sizeof(char) * (len + 1)));
+		if ((*sorted_array)[index_array] == NULL)
 		{
 			Error_msg(mem_E_msg);
-			free_str_arr(sorted_array);
+			free_ifnf("a", (*sorted_array));
 		}
-		while ((buffer)[i] != ' ' && (buffer)[i] != '\0')
+		while ((buffer)[i] != key && (buffer)[i] != '\0')
 		{
-			if (sorted_array[index_array] != NULL && sorted_index < len)
+			if ((*sorted_array)[index_array] != NULL && sorted_index < len)
 			{
-				sorted_array[index_array][sorted_index] = (buffer)[i];
+				(*sorted_array)[index_array][sorted_index] = (buffer)[i];
 				sorted_index++, i++;
 			}
 			if (sorted_index == len)
-				sorted_array[index_array][len] = '\0';
+				(*sorted_array)[index_array][len] = '\0';
 		}
-		len = len_per_word(buffer, i), sorted_index = 0, index_array++;
+		len = len_per_word(buffer, i, key), sorted_index = 0, index_array++;
 	}
-	sorted_array[no_words] = NULL;
-	return (sorted_array);
+	(*sorted_array)[no_words] = NULL;
+	return (*sorted_array);
 }

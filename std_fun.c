@@ -1,4 +1,4 @@
-#include "mystd_f.h"
+#include "main.h"
 
 /**
  * _strcmp - compares s1 and s2
@@ -32,14 +32,32 @@ int _strcmp(const char *s1, const char *s2)
  */
 char *_strcat(char *dest, const char *src)
 {
-	int d_size = (int) _strlen(dest), s_size = (int) _strlen(src), i, j;
+	int total_size = 0, i, d = 0, s = 0;
+	char *new_str;
 
-	for (i = d_size, j = 0; i < (d_size + s_size); j++, i++)
+	if (dest == NULL && src == NULL)
+		return (NULL);
+
+	total_size = (int) (_strlen(dest) + _strlen(src));
+	new_str = malloc(sizeof(char) * (total_size + 1));
+	if (new_str == NULL)
+		return (NULL);
+
+	for (i = 0; i < total_size;)
 	{
-		dest[i] = src[j];
+		while (dest[d] != '\0')
+		{
+			new_str[i] = dest[d];
+			i++, d++;
+		}
+		while (src[s] != '\0')
+		{
+			new_str[i] = src[s];
+			i++, s++;
+		}
 	}
-	dest[d_size + s_size] = '\0';
-	return (dest);
+	new_str[total_size] = '\0';
+	return (new_str);
 }
 /**
  * _strlen - calculates the length of a string
@@ -56,4 +74,39 @@ int _strlen(const char *s)
 	while (s[len] != '\0')
 		len++;
 	return (len);
+}
+
+/**
+ * free_ifnf - free given addresses if not freed
+ * @format: argument container
+ *
+ */
+void free_ifnf(const char *format, ...)
+{
+	va_list add;
+	int i = 0;
+	char *ptr_str = NULL;
+	char **ptr_arr = NULL;
+
+	va_start(add, format);
+	if (format ==  NULL)
+		return;
+	while (format[i] != '\0')
+	{
+		switch (format[i])
+		{
+			case 's':
+				ptr_str = va_arg(add, char *);
+				if (ptr_str != NULL)
+					free(ptr_str);
+				break;
+			case 'a':
+				ptr_arr = va_arg(add, char **);
+				if (ptr_arr != NULL)
+					free_str_arr(ptr_arr);
+				break;
+		}
+		i++;
+	}
+	va_end(add);
 }

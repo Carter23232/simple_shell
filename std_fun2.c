@@ -11,6 +11,11 @@ int _atoi(const char *s)
 
 	while (s[index])
 	{
+		if (s[index] == '-')
+		{
+			Error_msg("Illegal number: "), Error_msg(s);
+			return (EXIT_FAILURE);
+		}
 		if (s[index] == 45)
 		{
 			min *= -1;

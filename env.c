@@ -3,44 +3,45 @@
  * set_env - set environment variable
  * @arr: input string from getline
  * @toggle: switch that determines if set or not
- * @child: reference to the child PID.
  */
-void set_env(const char **arr, int *toggle, pid_t *child)
+void set_env(const char **arr)
 {
+	int ac = 0, i = 0;
+
 	if (arr == NULL)
+		return;
+	while (arr[i] != NULL)
+		ac++, i++;
+	if (ac != 3)
 	{
-		printf("Usage: setenv VARIABLE VALUE\n");
+		Error_msg("Usage: setenv VARIABLE VALUE\n");
 		return;
 	}
-	if ((setenv(arr[1], arr[2], 1)) != 0)
+	else if ((setenv((const char *)arr[1], (const char *)arr[2], 1)) != 0)
 		Error_msg("failed to set environment variable\n");
-	else
-	{
-		*toggle = 1;
-		*child = 0;
-	}
 
 }
 /**
  * unset_env - unset environment variable
  * @arr: input string from getline
  * @toggle: switch that determines if set or not
- * @child: reference to the child PID.
  */
-void unset_env(const char **arr, int *toggle, pid_t *child)
+void unset_env(const char **arr)
 {
-	if (arr == NULL || arr[0] == NULL || arr[1] == NULL)
+	int ac = 0, i = 0;
+
+	if (arr == NULL)
+		return;
+	while (arr[i] != NULL)
+		ac++, i++;
+	if (ac != 2)
 	{
 		Error_msg("Usage: unsetenv VARIABLE\n");
 		return;
 	}
-	if ((unsetenv(arr[1])) != 0)
+	else if ((unsetenv((const char *)arr[1])) != 0)
 		Error_msg("failed to unset environment variable\n");
-	else
-	{
-		*toggle = 1;
-		*child = 0;
-	}
+
 }
 
 /**
@@ -51,9 +52,9 @@ void unset_env(const char **arr, int *toggle, pid_t *child)
  * @ev: environment variable
  * @chd: reference to the child PID.
  */
-void change_d(const char **arr, int *tog, char **pr_dr, pid_t *chd, char *ev[])
+void change_d(const char **arr, char **pr_dr, char *ev[])
 {
-	char *buff;
+	char *buff, *env;
 	size_t buf_size;
 	int d_changed;
 
@@ -66,7 +67,8 @@ void change_d(const char **arr, int *tog, char **pr_dr, pid_t *chd, char *ev[])
 	if (arr[1] == NULL)
 	{
 		*pr_dr = _getenv(ev, "PWD");
-		d_changed = chdir(_getenv(ev, "HOME"));
+		d_changed = chdir(env = _getenv(ev, "HOME"));
+		free_ifnf("s", env);
 	}
 
 	else if (_strcmp(arr[1], "-") == 0)
@@ -81,14 +83,12 @@ void change_d(const char **arr, int *tog, char **pr_dr, pid_t *chd, char *ev[])
 		Error_msg(arr[1]), Error_msg(": do not exist.\n");
 	else
 	{
-		*tog = 1;
-		*chd = 0;
 		buf_size = pathconf(".", _PC_PATH_MAX);
 		buff = malloc(sizeof(char) * buf_size);
 		if (buff != NULL)
 		{
 			setenv("PWD", getcwd(buff, buf_size), 1);
-			free(buff);
+			free_ifnf("s", buff);
 		}
 	}
 }
@@ -102,23 +102,23 @@ void change_d(const char **arr, int *tog, char **pr_dr, pid_t *chd, char *ev[])
 char *_getenv(char *env[], char *str)
 {
 	char *env_;
-	int len_val = 0, i = 0, j, e = 0;
+	int len_val = 0, i = 0, j, e = 0, size;
 
 	if (env == NULL)
 		return (NULL);
-
+	size = _strlen(str);
 	while (env[i] != NULL)
 	{
-		if (_strncmp(str, _strlen(str), env[i]) == 0)
+		if (_strncmp(str, size, env[i]) == 0)
 		{
-			j = _strlen(str) + 1;
+			j = size + 1;
 			while (env[i][j] != '\0')
 				len_val++, j++;
 			break;
 		}
 		i++;
 	}
-	j = _strlen(str) + 1;
+	j = size + 1;
 	env_ = malloc((len_val + 1) * sizeof(char));
 	if (env_ == NULL)
 		return (NULL);
@@ -129,21 +129,4 @@ char *_getenv(char *env[], char *str)
 	}
 	env_[len_val] = '\0';
 	return (env_);
-}
-
-
-int envs_unset(char **env)
-{
-	int i = 0, n = 0;
-	if (env == NULL)
-		return (1);
-	while (env[i] != NULL)
-	{
-		if (env[i] != NULL)
-			n++;
-		i++;
-	}
-	if (n > 1)
-		return (0);
-	return (-1);
 }

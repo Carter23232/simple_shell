@@ -2,6 +2,7 @@
 #define MYSTD_F
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 
 int _strcmp(const char *s1, const char *s2);
@@ -11,4 +12,5 @@ int _strlen(const char *s);
 int _atoi(const char *s);
 char *_strcpy(char *dest, const char *src);
 char *int_str(int num);
+void free_ifnf(const char *format, ...);
 #endif

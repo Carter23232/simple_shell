@@ -1,0 +1,38 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="CustomRegExpInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myConfigurations">
+        <list>
+          <RegExpInspectionConfiguration>
+            <option name="name" value="limit functions per file" />
+            <option name="uuid" value="564be2fa-2cbe-3391-84e0-ea57e4986269" />
+            <option name="patterns">
+              <list>
+                <InspectionPattern>
+                  <option name="regExp" value="^void\s+\w+\s*\([^)]*\)\s*\{." />
+                  <option name="_fileType" value="ObjectiveC" />
+                  <option name="searchContext" value="ANY" />
+                  <option name="replacement" value="" />
+                </InspectionPattern>
+              </list>
+            </option>
+          </RegExpInspectionConfiguration>
+          <RegExpInspectionConfiguration>
+            <option name="name" value="fuctions per file" />
+            <option name="uuid" value="5a17ddcf-395f-3818-9d88-33a4898cb16b" />
+            <option name="patterns">
+              <list>
+                <InspectionPattern>
+                  <option name="regExp" value="^void\s+\w+\s*\([^)]*\)\s*\{." />
+                  <option name="_fileType" value="ObjectiveC" />
+                  <option name="searchContext" value="ANY" />
+                </InspectionPattern>
+              </list>
+            </option>
+          </RegExpInspectionConfiguration>
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
