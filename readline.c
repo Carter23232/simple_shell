@@ -104,7 +104,7 @@ int len_per_word(const char *str, size_t pos, char key)
 /**
  * token - splits a string into tokens(array of words)
  * @buffer: input string
- * Return: array of token
+ * Return: array of token.
  */
 char **token(char ***sorted_array, char *buffer, char key)
 {
