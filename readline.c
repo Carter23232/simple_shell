@@ -7,7 +7,8 @@
 d_ret get_command(char *env[])
 {
 	d_ret stream;
-	char *Err_msg = "failed: couldn't read user input\n", *pwd = NULL, *usr = NULL;
+	char *Err_msg = "failed: couldn't read user input\n",
+	*pwd = NULL, *usr = NULL;
 	size_t buffer_len = 0;
 	int interactive;
 
@@ -15,12 +16,13 @@ d_ret get_command(char *env[])
 	stream.buf = NULL;
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
-		_printf("Welcome back %s :~%s_$ ", usr = _getenv(env, "USERNAME"), pwd = _getenv(env, "PWD"));
+		_printf("Welcome back %s :~%s_$ ",
+			usr = _getenv(env, "USERNAME"), pwd = _getenv(env, "PWD"));
 	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
 	if (stream.val == -1)
 		free_ifnf("s", stream.buf);
 	if (stream.val == -1 && interactive == 1)
-		Error_msg(Err_msg);
+		Error_msg(1, Err_msg);
 	if (stream.val != -1)
 		stream.buf[_strlen(stream.buf) - 1] = '\0';
 	free_ifnf("s", pwd);
@@ -63,6 +65,7 @@ char *removeSpacesFromStr(char *string)
 /**
  * get_num_of_words - calculates the number of words in a string
  * @buffer: input string
+ * @key: delimeter
  * Return: number of words
  */
 int get_num_of_words(char *buffer, char key)
@@ -85,6 +88,7 @@ int get_num_of_words(char *buffer, char key)
  * len_per_word - calculates the number characters in a word
  * @str: input string
  * @pos: current position of iterator
+ * @key: delimeter
  * Return: number of characters in a word
  */
 int len_per_word(const char *str, size_t pos, char key)
@@ -103,7 +107,9 @@ int len_per_word(const char *str, size_t pos, char key)
 }
 /**
  * token - splits a string into tokens(array of words)
+ * @sorted_array: variable to store tokenized array
  * @buffer: input string
+ * @key: delimeter
  * Return: array of token.
  */
 char **token(char ***sorted_array, char *buffer, char key)
@@ -117,14 +123,14 @@ char **token(char ***sorted_array, char *buffer, char key)
 	buf_len = _strlen(buffer);
 	(*sorted_array) = malloc(sizeof(char *) * (no_words + 1));
 	if ((*sorted_array)  == NULL)
-		Error_msg(mem_E_msg);
+		Error_msg(1, mem_E_msg);
 	len = len_per_word(buffer, 0, key);
 	for (i = 0; i < buf_len; i++)
 	{
 		(*sorted_array)[index_array] = malloc((sizeof(char) * (len + 1)));
 		if ((*sorted_array)[index_array] == NULL)
 		{
-			Error_msg(mem_E_msg);
+			Error_msg(1, mem_E_msg);
 			free_ifnf("a", (*sorted_array));
 		}
 		while ((buffer)[i] != key && (buffer)[i] != '\0')

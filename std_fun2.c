@@ -13,7 +13,7 @@ int _atoi(const char *s)
 	{
 		if (s[index] == '-')
 		{
-			Error_msg("Illegal number: "), Error_msg(s);
+			Error_msg(2, "Illegal number: ", s);
 			return (EXIT_FAILURE);
 		}
 		if (s[index] == 45)

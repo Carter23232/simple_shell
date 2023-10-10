@@ -15,6 +15,7 @@ int test_dir(const char *arg)
 /**
  * arg_ind_zero - modify  index 0 of arr of str and pass as valid bash command
  * @input: string to modify
+ * @env : environment variable
  * Return: modified string
  */
 void arg_ind_zero(char **input, char **env)
@@ -36,6 +37,7 @@ void arg_ind_zero(char **input, char **env)
 /**
  * get_path - gets the path of a given test if exist
  * @input: string to lookup
+ * @env : environment variable
  * Return: path to the file if found
  */
 char *get_path(const char *input, char **env)
@@ -47,14 +49,14 @@ char *get_path(const char *input, char **env)
 	struct dirent *entry;
 
 	if (input == NULL && func_path == NULL && env == NULL)
-		return (NULL);
-	token(&func_path, var_path = _getenv(env, "PATH"),':');
+		return ((char *)input);
+	token(&func_path, var_path = _getenv(env, "PATH"), ':');
 
 	while (func_path[i] != NULL)
 	{
 		dir = opendir(func_path[i]);
 		if (dir == NULL)
-			Error_msg("directory open failed\n");
+			Error_msg(1, "directory open failed\n");
 		while ((entry = readdir(dir)) != NULL)
 		{
 			if (_strcmp(input, entry->d_name) == 0)
@@ -64,9 +66,10 @@ char *get_path(const char *input, char **env)
 				if (path == NULL)
 				{
 					free_ifnf("s", path);
-					return (NULL);
+					return ((char *)input);
 				}
-				_strcpy(path, func_path[i]), addr_path = _strcat(fw_slash = _strcat(path, "/"), input);
+				_strcpy(path, func_path[i]),
+					addr_path = _strcat(fw_slash = _strcat(path, "/"), input);
 				free_ifnf("sssa", path, var_path, fw_slash, func_path);
 				closedir(dir);
 				return (addr_path);
@@ -76,5 +79,5 @@ char *get_path(const char *input, char **env)
 		i++;
 	}
 	free_ifnf("ssa", path, var_path, func_path);
-	return (NULL);
+	return ((char *)input);
 }

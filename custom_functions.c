@@ -1,13 +1,24 @@
 #include "main.h"
 /**
  * Error_msg - sprints error messages to stderr
- * @msg: error msg
+ * @i : argument counter
  */
-void Error_msg(const char *msg)
+void Error_msg(int i, ...)
 {
-	if (msg == NULL)
+	va_list list;
+	char *ptr_str;
+	int counter = 0;
+
+	if (i < 1)
 		return;
-	write(STDERR_FILENO, msg, _strlen(msg));
+
+	va_start(list, i);
+	while (counter != i)
+	{
+		ptr_str = va_arg(list, char *);
+		write(STDERR_FILENO, ptr_str, _strlen(ptr_str));
+		counter++;
+	}
 }
 /**
  * free_str_arr - free memory of array of strings
@@ -54,11 +65,8 @@ int trailing_space(d_ret out)
 /**
 * ext - terminates all processes and exit shell
 * @status: exit status.
-* @toggle: switch that determines if set or not
 */
 void ext(int status)
 {
 	_exit(status);
 }
-
-

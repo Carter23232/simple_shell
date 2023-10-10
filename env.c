@@ -2,7 +2,6 @@
 /**
  * set_env - set environment variable
  * @arr: input string from getline
- * @toggle: switch that determines if set or not
  */
 void set_env(const char **arr)
 {
@@ -14,17 +13,16 @@ void set_env(const char **arr)
 		ac++, i++;
 	if (ac != 3)
 	{
-		Error_msg("Usage: setenv VARIABLE VALUE\n");
+		Error_msg(1, "Usage: setenv VARIABLE VALUE\n");
 		return;
 	}
 	else if ((setenv((const char *)arr[1], (const char *)arr[2], 1)) != 0)
-		Error_msg("failed to set environment variable\n");
+		Error_msg(1, "failed to set environment variable\n");
 
 }
 /**
  * unset_env - unset environment variable
  * @arr: input string from getline
- * @toggle: switch that determines if set or not
  */
 void unset_env(const char **arr)
 {
@@ -36,21 +34,19 @@ void unset_env(const char **arr)
 		ac++, i++;
 	if (ac != 2)
 	{
-		Error_msg("Usage: unsetenv VARIABLE\n");
+		Error_msg(1, "Usage: unsetenv VARIABLE\n");
 		return;
 	}
 	else if ((unsetenv((const char *)arr[1])) != 0)
-		Error_msg("failed to unset environment variable\n");
+		Error_msg(1, "failed to unset environment variable\n");
 
 }
 
 /**
  * change_d - changes directory
  * @arr: input string from getline
- * @tog: switch that determines if set or not
  * @pr_dr: stores the previous directory
  * @ev: environment variable
- * @chd: reference to the child PID.
  */
 void change_d(const char **arr, char **pr_dr, char *ev[])
 {
@@ -60,7 +56,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 
 	if (arr == NULL || arr[0] == NULL)
 	{
-		Error_msg("Usage: cd [DIRECTORY]\n");
+		Error_msg(1, "Usage: cd [DIRECTORY]\n");
 		return;
 	}
 
@@ -80,7 +76,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	}
 
 	if (d_changed != 0)
-		Error_msg(arr[1]), Error_msg(": do not exist.\n");
+		Error_msg(2, arr[1], ": do not exist.\n");
 	else
 	{
 		buf_size = pathconf(".", _PC_PATH_MAX);
