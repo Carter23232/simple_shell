@@ -59,6 +59,8 @@ char *removeSpacesFromStr(char *string)
 			len--;
 			i--;
 		}
+		else if (string[i] == ' ' && string [i + 1] == '\0')
+			string[i] = '\0';
 	}
 	return (string);
 }

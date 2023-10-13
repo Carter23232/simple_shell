@@ -6,8 +6,12 @@
  * @env : environment variable
  * Return: 0 on success
  */
+
 int main(int ac, char **argv, char *env[])
 {
+	int status = 0;
+
+	status = execute(ac, argv, env);
 	(void)argv;
-	return (execute(ac, argv, env));
+	return (status);
 }

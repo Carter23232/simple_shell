@@ -1,5 +1,6 @@
 #include "main.h"
-
+char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+		 "/usr/games:/usr/local/games:/snap/bin:/snap/bin";
 /**
  * test_dir - copies array of string
  * @arg: source
@@ -48,15 +49,24 @@ char *get_path(const char *input, char **env)
 	DIR *dir;
 	struct dirent *entry;
 
-	if (input == NULL && func_path == NULL && env == NULL)
+	if (input == NULL && env == NULL)
 		return ((char *)input);
-	token(&func_path, var_path = _getenv(env, "PATH"), ':');
+
+	var_path = _getenv(env, "PATH");
+	if (var_path == NULL)
+		return ((char *)input);
+	else
+		token(&func_path, var_path, ':');
 
 	while (func_path[i] != NULL)
 	{
 		dir = opendir(func_path[i]);
 		if (dir == NULL)
-			Error_msg(1, "directory open failed\n");
+		{
+			free_str_arr(func_path);
+			closedir(dir);
+			return (NULL);
+		}
 		while ((entry = readdir(dir)) != NULL)
 		{
 			if (_strcmp(input, entry->d_name) == 0)

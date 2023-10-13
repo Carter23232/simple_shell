@@ -20,6 +20,7 @@ typedef struct double_return
 	char *buf;
 	int val;
 } d_ret;
+
 d_ret get_command(char *env[]);
 char **token(char ***sorted_array, char *buffer, char key);
 int len_per_word(const char *string, size_t pos, char key);
@@ -36,6 +37,7 @@ void set_env(const char **arr);
 void unset_env(const char **arr);
 char *_getenv(char *env[], char *str);
 void change_d(const char **arr, char **previous_dir, char *env[]);
-int  built_in (int *status, char **arr ,char *buf, char *env[]);
+int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er);
 int trailing_space(d_ret out);
+char **copy_env_var(char **env);
 #endif

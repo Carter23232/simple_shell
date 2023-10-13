@@ -97,8 +97,8 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
  */
 char *_getenv(char *env[], char *str)
 {
-	char *env_;
-	int len_val = 0, i = 0, j, e = 0, size;
+	char *env_ = NULL;
+	int len_val = 0, i = 0, j, e = 0, size, found = 0;
 
 	if (env == NULL)
 		return (NULL);
@@ -110,19 +110,50 @@ char *_getenv(char *env[], char *str)
 			j = size + 1;
 			while (env[i][j] != '\0')
 				len_val++, j++;
+			found = 1;
 			break;
 		}
 		i++;
 	}
-	j = size + 1;
-	env_ = malloc((len_val + 1) * sizeof(char));
-	if (env_ == NULL)
-		return (NULL);
-	while (env[i][j] != '\0' && e < len_val)
+	if (found)
 	{
-		env_[e] = env[i][j];
-		j++, e++;
+		j = size + 1;
+		env_ = malloc((len_val + 1) * sizeof(char));
+		if (env_ == NULL)
+			return (NULL);
+		while (env[i][j] != '\0' && e < len_val)
+		{
+			env_[e] = env[i][j];
+			j++, e++;
+		}
+		env_[len_val] = '\0';
 	}
-	env_[len_val] = '\0';
+
 	return (env_);
+}
+
+char **copy_env_var(char **env)
+{
+	char **env_dup;
+	int num_element = 0, i = 0;
+
+	if(env == NULL)
+		return (NULL);
+	while (env[num_element] != NULL)
+		num_element++;
+
+	env_dup = malloc(sizeof (char *) * (num_element + 1));
+	if (env_dup == NULL)
+		return (NULL);
+	while (env[i] != NULL)
+	{
+		env_dup[i] = malloc(sizeof(char) * _strlen(env[i])  + 1);
+		if (env_dup[i] != NULL)
+			_strcpy(env_dup[i], env[i]);
+		i++;
+
+
+	}
+	env_dup[i] = NULL;
+	return (env_dup);
 }

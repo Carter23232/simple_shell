@@ -5,26 +5,28 @@
  *
  * Return: A integer
  */
-int _atoi(const char *s)
+ /*continuo here*/
+int _atoi(const char **s, char *argv ,int *err_n)
 {
 	int index = 0, no = 0, min = 1, mx = 0;
 
 	while (s[index])
 	{
-		if (s[index] == '-')
+		if (s[1][index] == '-')
 		{
-			Error_msg(2, "Illegal number: ", s);
-			return (EXIT_FAILURE);
+			err_n++;
+			Error_msg(7, argv, ": ",int_str(1), ": ", s[0], ": Illegal number: ", s[1]);
+			return (*err_n);
 		}
-		if (s[index] == 45)
+		if (s[1][index] == 45)
 		{
 			min *= -1;
 		}
 
-		while (s[index] >= 48 && s[index] <= 57)
+		while (s[1][index] >= 48 && s[1][index] <= 57)
 		{
 			mx = 1;
-			no = (no * 10) + (s[index] - '0');
+			no = (no * 10) + (s[1][index] - '0');
 			index++;
 		}
 
@@ -64,7 +66,7 @@ char *_strcpy(char *dest, const char *src)
 * @s1: lhs
 * @s2 : rhs
 * @n : length to compare
-* Return: returns copied string
+* Return: returns dif btn strings
 */
 int _strncmp(const char *s1, int n, const char *s2)
 {
