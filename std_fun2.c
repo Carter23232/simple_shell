@@ -15,7 +15,7 @@ int _atoi(const char **s, char *argv ,int *err_n)
 		if (s[1][index] == '-')
 		{
 			err_n++;
-			Error_msg(7, argv, ": ",int_str(1), ": ", s[0], ": Illegal number: ", s[1]);
+			Error_msg(7, argv, ": ",err_n, ": ", s[0], ": Illegal number: ", s[1]);
 			return (*err_n);
 		}
 		if (s[1][index] == 45)

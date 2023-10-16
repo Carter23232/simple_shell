@@ -71,7 +71,7 @@ int execute(int ac, char **argv, char **env)
 				else
 				{
 					num_E++, status = 127;
-					Error_msg(6, argv[0], ": ", no = int_str(num_E), ": ", arr[0], ": not found\n");
+					Error_msg(6, argv[0], ": ", no = int_str(num_E), ": ", buf, ": not found\n");
 				}
 				if (child == 0)
 				{
