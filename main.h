@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "mystd_f.h"
-#include "printf.h"
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -33,11 +32,11 @@ void arg_ind_zero(char **input, char **env);
 void free_str_arr(char **arr);
 int get_num_of_words(char *buffer, char key);
 void ext(int status);
-void set_env(const char **arr);
-void unset_env(const char **arr);
-char *_getenv(char *env[], char *str);
+int set_env(char ***env, char **arr);
+void unset_env(char ***environ, char **arr);
+d_ret _getenv(char *env[], char *str);
 void change_d(const char **arr, char **previous_dir, char *env[]);
-int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er);
+int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edited);
 int trailing_space(d_ret out);
 char **copy_env_var(char **env);
 #endif

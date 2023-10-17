@@ -7,7 +7,8 @@
  * @env : environment variable
  * Return: 1 if command is builtin 0 o/w
  */
-int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er)
+
+int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edt)
 {
 	if (_strcmp((arr)[0], "exit") == 0)
 	{
@@ -16,15 +17,20 @@ int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, cha
 		free_ifnf("as", arr, buf);
 		ext(*status);
 	}
+	else if (_strcmp((arr)[0], "env") == 0)
+	{
+		_env(env);
+		return (1);
+	}
 	else if (_strcmp((arr)[0], "setenv") == 0)
 	{
 
-		set_env((const char **)arr);
+		*env_edt = set_env(&env, arr);
 		return (1);
 	}
 	else if (_strcmp((arr)[0], "unsetenv") == 0)
 	{
-		unset_env((const char **)arr);
+		unset_env(&env, arr);
 		return (1);
 	}
 
@@ -51,7 +57,7 @@ int execute(int ac, char **argv, char **env)
 	char *buf = NULL, *prv_dir = getenv("PWD"), *no;
 	char **arr = NULL,**env_dup = copy_env_var(env);
 	pid_t child;
-	int status = 0, num_E = 0, ext_err = 0;
+	int status = 0, num_E = 0, ext_err = 0,env_edited;
 
 	(void)ac;
 	while ((ret = get_command(env_dup)).val != -1)
@@ -61,7 +67,7 @@ int execute(int ac, char **argv, char **env)
 			buf = removeSpacesFromStr(ret.buf);
 			token(&arr, buf, ' ');
 			child = -1;
-			if (built_in(&status, argv, &prv_dir, arr, buf, env_dup, &ext_err))
+			if (built_in(&status, argv, &prv_dir, arr, buf, env_dup, &ext_err, &env_edited))
 				;
 			else
 			{
@@ -84,11 +90,14 @@ int execute(int ac, char **argv, char **env)
 					/* Set return status to child's exit status */
 					status = WEXITSTATUS(status);
 			}
-			free_ifnf("asas", arr, buf, env_dup, no);
+			free_ifnf("ass", arr, buf, no);
+			if (!env_edited)
+				free_str_arr(env_dup);
 		}
 		else
 			free_ifnf("as", env_dup, ret.buf);
-		env_dup = copy_env_var(env);
+		if(!env_edited)
+			env_dup = copy_env_var(env);
 	}
 	return (status);
 }

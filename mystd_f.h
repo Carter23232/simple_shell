@@ -13,4 +13,6 @@ int _atoi(const char **s, char *argv ,int *err_n);
 char *_strcpy(char *dest, const char *src);
 char *int_str(int num);
 void free_ifnf(const char *format, ...);
+int myprintf(char *str, ...);
+int _env (char **env_var);
 #endif

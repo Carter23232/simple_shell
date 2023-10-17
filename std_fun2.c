@@ -12,10 +12,10 @@ int _atoi(const char **s, char *argv ,int *err_n)
 
 	while (s[index])
 	{
-		if (s[1][index] == '-')
+		if (s[1][index] == '-' || !(s[1][index] >= '0' && s[1][index] <= '9'))
 		{
-			err_n++;
-			Error_msg(7, argv, ": ",err_n, ": ", s[0], ": Illegal number: ", s[1]);
+			(*err_n)++;
+			Error_msg(8, argv, ": ", int_str(*err_n), ": ", s[0], ": Illegal number: ", s[1], "\n");
 			return (*err_n);
 		}
 		if (s[1][index] == 45)
@@ -97,6 +97,8 @@ char *int_str(int num)
 	int size = 0, dup = num, size_d;
 	char *str;
 
+	if (num == 0)
+		return ("0");
 	while (num > 0)
 	{
 		size++;
@@ -112,4 +114,45 @@ char *int_str(int num)
 	}
 	str[size_d] = '\0';
 	return (str);
+}
+
+/**
+  * myprintf - a simplified custom printf version
+  * @msg: the combo
+  * Return: number of output strings
+  */
+int myprintf(char *msg, ...)
+{
+	int i = 0, total_output = 0, len, msg_len;
+	char *str_cpy, c_cpy;
+	va_list opr;
+
+	if (msg == NULL)
+		return (0);
+
+	va_start(opr, msg);
+	msg_len = _strlen(msg);
+	while (msg[i] != '\0')
+	{
+		if (msg[i] == '%' && msg[i + 1] == 's')
+		{
+			str_cpy = va_arg(opr, char *);
+			write(STDOUT_FILENO, str_cpy, len = _strlen(str_cpy));
+			i += 2, total_output += len;
+		}
+		if (msg[i] == '%' && msg[i + 1] == 'c')
+		{
+			c_cpy = va_arg(opr, int);
+			write(STDOUT_FILENO, &c_cpy, 1);
+			i += 2, total_output += 1;
+		}
+		if (i < msg_len)
+		{
+			write(STDOUT_FILENO, &msg[i], 1);
+			total_output += 1;
+		}
+		i++;
+	}
+	va_end(opr);
+	return (total_output);
 }

@@ -16,8 +16,8 @@ d_ret get_command(char *env[])
 	stream.buf = NULL;
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
-		_printf("Welcome back %s :~%s_$ ",
-			usr = _getenv(env, "USERNAME"), pwd = _getenv(env, "PWD"));
+		myprintf("Welcome back %s :~%s_$ ",
+			usr = _getenv(env, "USERNAME").buf, pwd = _getenv(env, "PWD").buf);
 	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
 	if (stream.val == -1)
 		free_ifnf("s", stream.buf);

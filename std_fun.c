@@ -4,7 +4,6 @@
  * _strcmp - compares s1 and s2
  * @s1: lhs
  * @s2 : rhs
- *
  * Return: returns copied string
  */
 
@@ -62,7 +61,6 @@ char *_strcat(char *dest, const char *src)
 /**
  * _strlen - calculates the length of a string
  * @s: the string to calculate the length of
- *
  * Return: the length of the string
  */
 int _strlen(const char *s)
@@ -79,7 +77,6 @@ int _strlen(const char *s)
 /**
  * free_ifnf - free given addresses if not freed
  * @format: argument container
- *
  */
 void free_ifnf(const char *format, ...)
 {

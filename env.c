@@ -3,30 +3,75 @@
  * set_env - set environment variable
  * @arr: input string from getline
  */
-void set_env(const char **arr)
+
+int set_env(char ***env, char **arr)
 {
-	int ac = 0, i = 0;
+	int ac = 0, i = 0, j = 0;
+	d_ret g_var;
+	char **new_env = NULL;
 
 	if (arr == NULL)
-		return;
+		return (0);
+
 	while (arr[i] != NULL)
 		ac++, i++;
+
 	if (ac != 3)
 	{
 		Error_msg(1, "Usage: setenv VARIABLE VALUE\n");
-		return;
+		return (0);
 	}
-	else if ((setenv((const char *)arr[1], (const char *)arr[2], 1)) != 0)
-		Error_msg(1, "failed to set environment variable\n");
 
+	g_var = _getenv(*env, arr[1]);
+
+	if (g_var.buf != NULL)
+	{
+		free(g_var.buf);
+		(*env)[g_var.val] = malloc(sizeof(char) * (_strlen(arr[1]) + _strlen(arr[2]) + 2));
+		if ((*env)[g_var.val] != NULL)
+		{
+			_strcpy((*env)[g_var.val], arr[1]);
+			(*env)[g_var.val] = _strcat((*env)[g_var.val], "=");
+			(*env)[g_var.val] =_strcat((*env)[g_var.val], arr[2]);
+		}
+	}
+	else
+	{
+		new_env = malloc(sizeof(char *) * (g_var.val + 2));
+		if (new_env != NULL)
+		{
+			while ((*env)[j] != NULL)
+			{
+				new_env[j] = malloc(sizeof(char) * (_strlen((*env)[j]) + 1));
+				if (new_env[j] != NULL)
+					_strcpy(new_env[j], (*env)[j]);
+				else
+					free_str_arr(new_env);
+				j++;
+			}
+		}
+		new_env[j] = malloc(sizeof(char) * (_strlen(arr[1]) + _strlen(arr[2]) + 2));
+		if (new_env[j] != NULL)
+		{
+			_strcpy(new_env[j], arr[1]);
+			new_env[j] = _strcat(new_env[j], "=");
+			new_env[j] = _strcat(new_env[j], arr[2]);
+			j++;
+		}
+		new_env[j] = NULL;
+		*env = new_env;
+	}
+	return (1);
 }
+
 /**
  * unset_env - unset environment variable
  * @arr: input string from getline
  */
-void unset_env(const char **arr)
+void unset_env(char ***env, char **arr)
 {
 	int ac = 0, i = 0;
+	d_ret g_var;
 
 	if (arr == NULL)
 		return;
@@ -37,14 +82,22 @@ void unset_env(const char **arr)
 		Error_msg(1, "Usage: unsetenv VARIABLE\n");
 		return;
 	}
-	else if ((unsetenv((const char *)arr[1])) != 0)
-		Error_msg(1, "failed to unset environment variable\n");
-
+	g_var = _getenv(*env, arr[1]);
+	if (g_var.buf != NULL)
+	{
+		free(g_var.buf);
+		(*env)[g_var.val] = malloc(sizeof(char) * (_strlen(arr[1]) + 2));
+		if ((*env)[g_var.val] != NULL)
+		{
+			_strcpy((*env)[g_var.val], arr[1]), (*env)[g_var.val] = _strcat((*env)[g_var.val], "=");
+		}
+	}
+free(g_var.buf);
 }
 
 /**
  * change_d - changes directory
- * @arr: input string from getline
+ * @environ: input string from getline
  * @pr_dr: stores the previous directory
  * @ev: environment variable
  */
@@ -62,8 +115,8 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 
 	if (arr[1] == NULL)
 	{
-		*pr_dr = _getenv(ev, "PWD");
-		d_changed = chdir(env = _getenv(ev, "HOME"));
+		*pr_dr = _getenv(ev, "PWD").buf;
+		d_changed = chdir(env = _getenv(ev, "HOME").buf);
 		free_ifnf("s", env);
 	}
 
@@ -71,7 +124,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 		d_changed = chdir(*pr_dr);
 	else
 	{
-		*pr_dr = _getenv(ev, "PWD");
+		*pr_dr = _getenv(ev, "PWD").buf;
 		d_changed = chdir(arr[1]);
 	}
 
@@ -95,13 +148,15 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
  * @env: environment variable
  * Return: value of variable
  */
-char *_getenv(char *env[], char *str)
+d_ret _getenv(char *env[], char *str)
 {
-	char *env_ = NULL;
+	d_ret env_ret;
 	int len_val = 0, i = 0, j, e = 0, size, found = 0;
 
+	env_ret.buf = NULL;
+
 	if (env == NULL)
-		return (NULL);
+		return (env_ret);
 	size = _strlen(str);
 	while (env[i] != NULL)
 	{
@@ -118,20 +173,26 @@ char *_getenv(char *env[], char *str)
 	if (found)
 	{
 		j = size + 1;
-		env_ = malloc((len_val + 1) * sizeof(char));
-		if (env_ == NULL)
-			return (NULL);
+		env_ret.buf = malloc((len_val + 1) * sizeof(char));
+		if (env_ret.buf == NULL)
+			return (env_ret);
 		while (env[i][j] != '\0' && e < len_val)
 		{
-			env_[e] = env[i][j];
+			env_ret.buf[e] = env[i][j];
 			j++, e++;
 		}
-		env_[len_val] = '\0';
+		env_ret.buf[len_val] = '\0';
 	}
 
-	return (env_);
+	env_ret.val = i;
+	return (env_ret);
 }
 
+/**
+ * copy_env_var - makes a copy of environmental variable
+ * @env: reference to environmental variables
+ * Return: a duplicate of env variables or NULL if does not exist
+ */
 char **copy_env_var(char **env)
 {
 	char **env_dup;

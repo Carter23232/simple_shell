@@ -52,7 +52,7 @@ char *get_path(const char *input, char **env)
 	if (input == NULL && env == NULL)
 		return ((char *)input);
 
-	var_path = _getenv(env, "PATH");
+	var_path = _getenv(env, "PATH").buf;
 	if (var_path == NULL)
 		return ((char *)input);
 	else
