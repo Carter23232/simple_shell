@@ -68,7 +68,7 @@ int _strlen(const char *s)
 	int len = 0;
 
 	if (s == NULL)
-		return (-1);
+		return (len);
 	while (s[len] != '\0')
 		len++;
 	return (len);
