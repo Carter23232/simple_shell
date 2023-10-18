@@ -21,7 +21,7 @@ typedef struct double_return
 	int val;
 } d_ret;
 
-d_ret get_command(char *env[]);
+d_ret get_command();
 char **token(char ***sorted_array, char *buffer, char key);
 int len_per_word(const char *string, size_t pos, char key);
 char  *removeSpacesFromStr(char *str);

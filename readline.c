@@ -4,11 +4,9 @@
  * @env: evironment variable
  * Return: a string and a value as output
  */
-d_ret get_command(char *env[])
+d_ret get_command()
 {
 	d_ret stream;
-	char *Err_msg = "failed: couldn't read user input\n",
-	*pwd = NULL, *usr = NULL;
 	size_t buffer_len = 0;
 	int interactive;
 
@@ -16,17 +14,14 @@ d_ret get_command(char *env[])
 	stream.buf = NULL;
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
-		myprintf("Welcome back %s :~%s_$ ",
-			usr = _getenv(env, "USERNAME").buf, pwd = _getenv(env, "PWD").buf);
+		myprintf("$ ");
 	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
 	if (stream.val == -1)
 		free_ifnf("s", stream.buf);
 	if (stream.val == -1 && interactive == 1)
-		Error_msg(1, Err_msg);
+		exit(0);
 	if (stream.val != -1)
 		stream.buf[_strlen(stream.buf) - 1] = '\0';
-	free_ifnf("s", pwd);
-	free_ifnf("s", usr);
 	return (stream);
 }
 /**

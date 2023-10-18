@@ -64,7 +64,7 @@ int execute(int ac, char **argv, char **env)
 	int status = 0, num_E = 0, ext_err = 0, env_edited;
 
 	(void)ac;
-	while ((ret = get_command(env_dup)).val != -1)
+	while ((ret = get_command()).val != -1)
 	{
 		if (!trailing_space(ret))
 		{
