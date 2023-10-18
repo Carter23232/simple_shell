@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <string.h>
 
 /**
  * struct double_return - returns double variables
