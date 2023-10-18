@@ -18,7 +18,7 @@ d_ret get_command(void)
 	if (stream.val == -1)
 		free_ifnf("s", stream.buf);
 	if (stream.val == -1 && interactive == 1)
-		exit(0);
+		ext(0);
 	if (stream.val != -1)
 		stream.buf[_strlen(stream.buf) - 1] = '\0';
 	return (stream);
