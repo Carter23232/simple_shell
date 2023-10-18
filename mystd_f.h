@@ -9,10 +9,10 @@ int _strcmp(const char *s1, const char *s2);
 int _strncmp(const char *s1, int n, const char *s2);
 char *_strcat(char *dest, const char *src);
 int _strlen(const char *s);
-int _atoi(const char **s, char *argv ,int *err_n);
+int _atoi(const char **s, char *argv, int *err_n);
 char *_strcpy(char *dest, const char *src);
 char *int_str(int num);
 void free_ifnf(const char *format, ...);
 int myprintf(char *str, ...);
-int _env (char **env_var);
+int _env(char **env_var);
 #endif

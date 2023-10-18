@@ -20,7 +20,6 @@ int test_dir(const char *arg)
  */
 void arg_ind_zero(char **input, char **env)
 {
-	char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin";
 	int i = 0, is_path = 0;
 
 	if (input == NULL)

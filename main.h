@@ -14,8 +14,6 @@
  * @val: value
  * Description: returns two output in a function
  */
- char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
-		 "/usr/games:/usr/local/games:/snap/bin:/snap/bin";
 typedef struct double_return
 {
 	char *buf;
@@ -27,7 +25,7 @@ char **token(char ***sorted_array, char *buffer, char key);
 int len_per_word(const char *string, size_t pos, char key);
 char  *removeSpacesFromStr(char *str);
 void Error_msg(int i, ...);
-int execute(int ac, char **argv,char **env);
+int execute(int ac, char **argv, char **env);
 char *get_path(const char *input, char **env);
 int test_dir(const char *arg);
 void arg_ind_zero(char **input, char **env);
@@ -38,7 +36,7 @@ int set_env(char ***env, char **arr);
 void unset_env(char ***environ, char **arr);
 d_ret _getenv(char *env[], char *str);
 void change_d(const char **arr, char **previous_dir, char *env[]);
-int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edited);
+int  built_in(int *status, char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edited);
 int trailing_space(d_ret out);
 char **copy_env_var(char **env);
 #endif
