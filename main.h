@@ -14,6 +14,8 @@
  * @val: value
  * Description: returns two output in a function
  */
+ char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+		 "/usr/games:/usr/local/games:/snap/bin:/snap/bin";
 typedef struct double_return
 {
 	char *buf;

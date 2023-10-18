@@ -2,6 +2,8 @@
 /**
  * set_env - set environment variable
  * @arr: input string from getline
+ * @env: pointer to env variable
+ *Return: return 1 if succesful or 0 o/w
  */
 
 int set_env(char ***env, char **arr)
@@ -32,7 +34,7 @@ int set_env(char ***env, char **arr)
 		{
 			_strcpy((*env)[g_var.val], arr[1]);
 			(*env)[g_var.val] = _strcat((*env)[g_var.val], "=");
-			(*env)[g_var.val] =_strcat((*env)[g_var.val], arr[2]);
+			(*env)[g_var.val] = _strcat((*env)[g_var.val], arr[2]);
 		}
 	}
 	else
@@ -67,6 +69,7 @@ int set_env(char ***env, char **arr)
 /**
  * unset_env - unset environment variable
  * @arr: input string from getline
+ * @env: pointer to env variable
  */
 void unset_env(char ***env, char **arr)
 {
@@ -97,7 +100,7 @@ free(g_var.buf);
 
 /**
  * change_d - changes directory
- * @environ: input string from getline
+ * @arr: input string from getline
  * @pr_dr: stores the previous directory
  * @ev: environment variable
  */
@@ -198,12 +201,12 @@ char **copy_env_var(char **env)
 	char **env_dup;
 	int num_element = 0, i = 0;
 
-	if(env == NULL)
+	if (env == NULL)
 		return (NULL);
 	while (env[num_element] != NULL)
 		num_element++;
 
-	env_dup = malloc(sizeof (char *) * (num_element + 1));
+	env_dup = malloc(sizeof(char *) * (num_element + 1));
 	if (env_dup == NULL)
 		return (NULL);
 	while (env[i] != NULL)

@@ -2,11 +2,11 @@
 /**
  * _atoi - Convert a string to an integer.
  * @s: The pointer to convert
- *
+ * @argv: argument variable
+ * @err_n: error counter
  * Return: A integer
  */
- /*continuo here*/
-int _atoi(const char **s, char *argv ,int *err_n)
+int _atoi(const char **s, char *argv, int *err_n)
 {
 	int index = 0, no = 0, min = 1, mx = 0;
 

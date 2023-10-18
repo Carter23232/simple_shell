@@ -2,18 +2,22 @@
 /**
  * built_in - handles built in functions
  * @status : update status value
+ * @argv: argument variables
+ * @pr_dir: previous dir
  * @buf : argument counter
  * @arr : tokenized array
  * @env : environment variable
+ * @ext_er:exit toggle
+ * @env_edt: env edit toggle
  * Return: 1 if command is builtin 0 o/w
  */
 
-int  built_in(int *status,char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edt)
+int  built_in(int *status, char **argv, char **pr_dir, char **arr, char *buf, char *env[], int *ext_er, int *env_edt)
 {
 	if (_strcmp((arr)[0], "exit") == 0)
 	{
 		if ((arr)[1] != NULL)
-			*status = _atoi((const char**)arr, argv[0], ext_er);
+			*status = _atoi((const char **)arr, argv[0], ext_er);
 		free_ifnf("as", arr, buf);
 		ext(*status);
 	}
@@ -55,9 +59,9 @@ int execute(int ac, char **argv, char **env)
 {
 	d_ret ret;
 	char *buf = NULL, *prv_dir = getenv("PWD"), *no;
-	char **arr = NULL,**env_dup = copy_env_var(env);
+	char **arr = NULL, **env_dup = copy_env_var(env);
 	pid_t child;
-	int status = 0, num_E = 0, ext_err = 0,env_edited;
+	int status = 0, num_E = 0, ext_err = 0, env_edited;
 
 	(void)ac;
 	while ((ret = get_command(env_dup)).val != -1)
@@ -96,7 +100,7 @@ int execute(int ac, char **argv, char **env)
 		}
 		else
 			free_ifnf("as", env_dup, ret.buf);
-		if(!env_edited)
+		if (!env_edited)
 			env_dup = copy_env_var(env);
 	}
 	return (status);

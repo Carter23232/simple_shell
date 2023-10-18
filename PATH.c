@@ -1,6 +1,5 @@
 #include "main.h"
-char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
-		 "/usr/games:/usr/local/games:/snap/bin:/snap/bin";
+
 /**
  * test_dir - copies array of string
  * @arg: source
@@ -21,6 +20,7 @@ int test_dir(const char *arg)
  */
 void arg_ind_zero(char **input, char **env)
 {
+	char *PATH_ARR = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin";
 	int i = 0, is_path = 0;
 
 	if (input == NULL)
@@ -55,8 +55,8 @@ char *get_path(const char *input, char **env)
 	var_path = _getenv(env, "PATH").buf;
 	if (var_path == NULL)
 		return ((char *)input);
-	else
-		token(&func_path, var_path, ':');
+
+	token(&func_path, var_path, ':');
 
 	while (func_path[i] != NULL)
 	{
