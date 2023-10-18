@@ -23,7 +23,6 @@ char **get_environ(info_t *info)
  *        constant function prototype.
  * @var: the string env var property
  * Return: 1 on delete, 0 otherwise
-
  */
 int _unsetenv(info_t *info, char *var)
 {
