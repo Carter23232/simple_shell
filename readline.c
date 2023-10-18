@@ -1,7 +1,6 @@
 #include "main.h"
 /**
  * get_command - gets command from stdin
- * @env: evironment variable
  * Return: a string and a value as output
  */
 d_ret get_command(void)
