@@ -20,7 +20,7 @@ int set_env(char ***env, char **arr)
 
 	if (ac != 3)
 	{
-		Error_msg(1, "Usage: setenv VARIABLE VALUE\n");
+		Error_msg("Usage: setenv VARIABLE VALUE\n", NULL, NULL);
 		return (0);
 	}
 
@@ -33,8 +33,8 @@ int set_env(char ***env, char **arr)
 		if ((*env)[g_var.val] != NULL)
 		{
 			_strcpy((*env)[g_var.val], arr[1]);
-			(*env)[g_var.val] = _strcat((*env)[g_var.val], "=");
-			(*env)[g_var.val] = _strcat((*env)[g_var.val], arr[2]);
+			_strcat((*env)[g_var.val], "=");
+			_strcat((*env)[g_var.val], arr[2]);
 		}
 	}
 	else
@@ -56,8 +56,8 @@ int set_env(char ***env, char **arr)
 		if (new_env[j] != NULL)
 		{
 			_strcpy(new_env[j], arr[1]);
-			new_env[j] = _strcat(new_env[j], "=");
-			new_env[j] = _strcat(new_env[j], arr[2]);
+			_strcat(new_env[j], "=");
+			_strcat(new_env[j], arr[2]);
 			j++;
 		}
 		new_env[j] = NULL;
@@ -82,7 +82,7 @@ void unset_env(char ***env, char **arr)
 		ac++, i++;
 	if (ac != 2)
 	{
-		Error_msg(1, "Usage: unsetenv VARIABLE\n");
+		Error_msg("Usage: unsetenv VARIABLE\n", NULL, NULL);
 		return;
 	}
 	g_var = _getenv(*env, arr[1]);
@@ -92,7 +92,7 @@ void unset_env(char ***env, char **arr)
 		(*env)[g_var.val] = malloc(sizeof(char) * (_strlen(arr[1]) + 2));
 		if ((*env)[g_var.val] != NULL)
 		{
-			_strcpy((*env)[g_var.val], arr[1]), (*env)[g_var.val] = _strcat((*env)[g_var.val], "=");
+			_strcpy((*env)[g_var.val], arr[1]), _strcat((*env)[g_var.val], "=");
 		}
 	}
 free(g_var.buf);
@@ -112,7 +112,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 
 	if (arr == NULL || arr[0] == NULL)
 	{
-		Error_msg(1, "Usage: cd [DIRECTORY]\n");
+		Error_msg("Usage: cd [DIRECTORY]\n", NULL, NULL);
 		return;
 	}
 
@@ -120,7 +120,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	{
 		*pr_dr = _getenv(ev, "PWD").buf;
 		d_changed = chdir(env = _getenv(ev, "HOME").buf);
-		free_ifnf("s", env);
+		free(env);
 	}
 
 	else if (_strcmp(arr[1], "-") == 0)
@@ -132,7 +132,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	}
 
 	if (d_changed != 0)
-		Error_msg(2, arr[1], ": do not exist.\n");
+		Error_msg((char *)arr[1], ": do not exist.\n", NULL);
 	else
 	{
 		buf_size = pathconf(".", _PC_PATH_MAX);
@@ -140,7 +140,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 		if (buff != NULL)
 		{
 			setenv("PWD", getcwd(buff, buf_size), 1);
-			free_ifnf("s", buff);
+			free(buff);
 		}
 	}
 }

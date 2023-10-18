@@ -12,7 +12,7 @@ int _env(char **env_var)
 		return (0);
 	while (env_var[i] != NULL)
 	{
-		total_output += myprintf("%s\n", env_var[i]);
+		total_output += _puts(env_var[i]), _puts("\n");
 		i++;
 	}
 	return (total_output);

@@ -29,35 +29,18 @@ int _strcmp(const char *s1, const char *s2)
  * @src : word to add
  * Return: returns modified string
  */
-char *_strcat(char *dest, const char *src)
+char *_strcat(char *dest, char *src)
 {
-	int total_size = 0, i, d = 0, s = 0;
-	char *new_str;
+	char *ret = dest;
 
-	if (dest == NULL && src == NULL)
-		return (NULL);
-
-	total_size = (int) (_strlen(dest) + _strlen(src));
-	new_str = malloc(sizeof(char) * (total_size + 1));
-	if (new_str == NULL)
-		return (NULL);
-
-	for (i = 0; i < total_size;)
-	{
-		while (dest[d] != '\0')
-		{
-			new_str[i] = dest[d];
-			i++, d++;
-		}
-		while (src[s] != '\0')
-		{
-			new_str[i] = src[s];
-			i++, s++;
-		}
-	}
-	new_str[total_size] = '\0';
-	return (new_str);
+	while (*dest)
+		dest++;
+	while (*src)
+		*dest++ = *src++;
+	*dest = *src;
+	return (ret);
 }
+
 /**
  * _strlen - calculates the length of a string
  * @s: the string to calculate the length of

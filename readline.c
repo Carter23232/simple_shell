@@ -13,10 +13,10 @@ d_ret get_command(void)
 	stream.buf = NULL;
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
-		myprintf("$ ");
+		_puts("$ ");
 	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
 	if (stream.val == -1)
-		free_ifnf("s", stream.buf);
+		free(stream.buf);
 	if (stream.val == -1 && interactive == 1)
 		ext(0);
 	if (stream.val != -1)
@@ -119,15 +119,15 @@ char **token(char ***sorted_array, char *buffer, char key)
 	buf_len = _strlen(buffer);
 	(*sorted_array) = malloc(sizeof(char *) * (no_words + 1));
 	if ((*sorted_array)  == NULL)
-		Error_msg(1, mem_E_msg);
+		Error_msg(mem_E_msg, NULL, NULL);
 	len = len_per_word(buffer, 0, key);
 	for (i = 0; i < buf_len; i++)
 	{
 		(*sorted_array)[index_array] = malloc((sizeof(char) * (len + 1)));
 		if ((*sorted_array)[index_array] == NULL)
 		{
-			Error_msg(1, mem_E_msg);
-			free_ifnf("a", (*sorted_array));
+			Error_msg(mem_E_msg, NULL, NULL);
+			free_str_arr(*sorted_array);
 		}
 		while ((buffer)[i] != key && (buffer)[i] != '\0')
 		{

@@ -43,7 +43,7 @@ void arg_ind_zero(char **input, char **env)
 char *get_path(const char *input, char **env)
 {
 	char **func_path = NULL;
-	char *path = NULL, *addr_path, *var_path, *fw_slash;
+	char *path = NULL, *var_path;
 	unsigned int i = 0, len_arr;
 	DIR *dir;
 	struct dirent *entry;
@@ -74,19 +74,18 @@ char *get_path(const char *input, char **env)
 				path = malloc(sizeof(char) * (len_arr + 1));
 				if (path == NULL)
 				{
-					free_ifnf("s", path);
+					free(path);
 					return ((char *)input);
 				}
-				_strcpy(path, func_path[i]),
-					addr_path = _strcat(fw_slash = _strcat(path, "/"), input);
-				free_ifnf("sssa", path, var_path, fw_slash, func_path);
+				_strcpy(path, func_path[i]), _strcat(path, "/"), _strcat(path, (char *)input);
+				free(var_path), free_str_arr(func_path);
 				closedir(dir);
-				return (addr_path);
+				return (path);
 			}
 		}
 		closedir(dir);
 		i++;
 	}
-	free_ifnf("ssa", path, var_path, func_path);
+	free(path), free(var_path), free_str_arr(func_path);
 	return ((char *)input);
 }

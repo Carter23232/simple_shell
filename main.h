@@ -7,7 +7,6 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <string.h>
 
 /**
  * struct double_return - returns double variables
@@ -25,7 +24,7 @@ d_ret get_command(void);
 char **token(char ***sorted_array, char *buffer, char key);
 int len_per_word(const char *string, size_t pos, char key);
 char  *removeSpacesFromStr(char *str);
-void Error_msg(int i, ...);
+void Error_msg(char *msg, char *msg2, char *msg3);
 int execute(int ac, char **argv, char **env);
 char *get_path(const char *input, char **env);
 int test_dir(const char *arg);

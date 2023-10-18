@@ -3,22 +3,20 @@
  * Error_msg - sprints error messages to stderr
  * @i : argument counter
  */
-void Error_msg(int i, ...)
+void Error_msg(char *msg, char *msg2, char *msg3)
 {
-	va_list list;
-	char *ptr_str;
-	int counter = 0;
-
-	if (i < 1)
+	if (msg == NULL)
 		return;
+	write(STDERR_FILENO, msg, _strlen(msg));
 
-	va_start(list, i);
-	while (counter != i)
-	{
-		ptr_str = va_arg(list, char *);
-		write(STDERR_FILENO, ptr_str, _strlen(ptr_str));
-		counter++;
-	}
+	if (msg2 == NULL)
+		return;
+	write(STDERR_FILENO, msg2, _strlen(msg2));
+
+	if (msg3 == NULL)
+		return;
+	write(STDERR_FILENO, msg3, _strlen(msg3));
+
 }
 /**
  * free_str_arr - free memory of array of strings

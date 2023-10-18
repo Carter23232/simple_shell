@@ -18,7 +18,7 @@ int  built_in(int *status, char **argv, char **pr_dir, char **arr, char *buf, ch
 	{
 		if ((arr)[1] != NULL)
 			*status = _atoi((const char **)arr, argv[0], ext_er);
-		free_ifnf("as", arr, buf);
+		free_str_arr(arr), free(buf);
 		ext(*status);
 	}
 	else if (_strcmp((arr)[0], "env") == 0)
@@ -58,7 +58,7 @@ int  built_in(int *status, char **argv, char **pr_dir, char **arr, char *buf, ch
 int execute(int ac, char **argv, char **env)
 {
 	d_ret ret;
-	char *buf = NULL, *prv_dir = getenv("PWD"), *no;
+	char *buf = NULL, *prv_dir = getenv("PWD"), *no = NULL;
 	char **arr = NULL, **env_dup = copy_env_var(env);
 	pid_t child;
 	int status = 0, num_E = 0, ext_err = 0, env_edited;
@@ -81,12 +81,14 @@ int execute(int ac, char **argv, char **env)
 				else
 				{
 					num_E++, status = 127;
-					Error_msg(6, argv[0], ": ", no = int_str(num_E), ": ", buf, ": not found\n");
+					no = int_str(num_E);
+					Error_msg(argv[0], ": ", no);
+					Error_msg(": ", buf, ": not found\n");
 				}
 				if (child == 0)
 				{
 					if (execve(arr[0], arr, env_dup))
-						Error_msg(2, buf, "failed to run command .\n");
+						Error_msg(buf, "failed to run command .\n", NULL);
 				}
 				else
 					wait(&status);
@@ -94,14 +96,14 @@ int execute(int ac, char **argv, char **env)
 					/* Set return status to child's exit status */
 					status = WEXITSTATUS(status);
 			}
-			free_ifnf("ass", arr, buf, no);
+			free_str_arr(arr), free(buf);
 			if (!env_edited)
 				free_str_arr(env_dup);
 		}
 		else
-			free_ifnf("as", env_dup, ret.buf);
-		if (!env_edited)
-			env_dup = copy_env_var(env);
+			free_str_arr(env_dup), free(ret.buf);
+		env_dup = copy_env_var(env);
 	}
+	free(no);
 	return (status);
 }
