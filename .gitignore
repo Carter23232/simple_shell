@@ -1,8 +1,0 @@
-/cmake-build-debug
-/TEST_SUITE
-allowed_functions
-CMakeLists.txt
-runchecker.bash
-/.idea
-.gitignore
-hsh
