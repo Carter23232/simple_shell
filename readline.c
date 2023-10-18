@@ -4,7 +4,7 @@
  * @env: evironment variable
  * Return: a string and a value as output
  */
-d_ret get_command()
+d_ret get_command(void)
 {
 	d_ret stream;
 	size_t buffer_len = 0;
