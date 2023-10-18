@@ -1,17 +1,13 @@
-# Simple Shell
-
-## Issues To Fix
-- Handle the EOF condition in the program entry point file (task 1).
-- Handle the EOF condition in the custom getline function (task 6).
-- Handle the "permission denied" issue when you.
-- Line 33 of `ss-getline.c`, find out if that error needs to be printed.
-- Test out the setenv feature for new variables.
-
-!IMPORTANT
-- Remember to free the new environ you allocated when updating the env variables.
-- Try to see if you can free environ before the program ends.
-- Try to see if you can use VS Code to see what has been freed or not.
-- Handle edge case where you press enter without entering anything.
-- Handle edge case where extra line is printed.
-
-By Uche Ofia and Nousair.
+# simple_shell
+General
+Allowed editors: vi, vim, emacs
+All your files will be compiled on Ubuntu 20.04 LTS using gcc, using the options -Wall -Werror -Wextra -pedantic -std=gnu89
+All your files should end with a new line
+A README.md file, at the root of the folder of the project is mandatory
+Your code should use the Betty style. It will be checked using betty-style.pl and betty-doc.pl
+Your shell should not have any memory leaks
+No more than 5 functions per file
+All your header files should be include guarded
+Use system calls only when you need to (why?)
+Write a README with the description of your project
+You should have an AUTHORS file at the root of your repository, listing all individuals having contributed content to the repository. Format, see Docker
