@@ -112,7 +112,7 @@ typedef struct builtin
 
 
 int hsh(info_t *, char **);
-int find_builtin(info_t *);
+int handle_builtin(info_t *);
 void find_cmd(info_t *);
 void fork_cmd(info_t *);
 int is_cmd(info_t *, char *);
@@ -195,7 +195,7 @@ char **list_to_strings(list_t *);
 list_t *node_starts_with(list_t *, char *, char);
 
 /* toem_vars.c */
-int is_chain(info_t *, char *, size_t *);
+int chain_of_cmd(info_t *, char *, size_t *);
 void check_chain(info_t *, char *, size_t *, size_t, size_t);
 int replace_alias(info_t *);
 int replace_vars(info_t *);

@@ -10,7 +10,7 @@
  */
 ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
-	ssize_t r = 0;
+	ssize_t re = 0;
 	size_t len_p = 0;
 
 	if (!*len)
@@ -21,25 +21,25 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
 #if USE_GETLINE
 		r = getline(buf, &len_p, stdin);
 #else
-		r = _getline(info, buf, &len_p);
+		re = _getline(info, buf, &len_p);
 #endif
-		if (r > 0)
+		if (re > 0)
 		{
-			if ((*buf)[r - 1] == '\n')
+			if ((*buf)[re - 1] == '\n')
 			{
-				(*buf)[r - 1] = '\0';
-				r--;
+				(*buf)[re - 1] = '\0';
+				re--;
 			}
 			info->linecount_flag = 1;
 			build_history_list(info, *buf, info->histcount++);
 			/* if (_strchr(*buf, ';')) is this a command chain? */
 			{
-				*len = r;
+				*len = re;
 				info->cmd_buf = buf;
 			}
 		}
 	}
-	return (r);
+	return (re);
 }
 
 /**
@@ -50,7 +50,7 @@ ssize_t input_buf(info_t *info, char **buf, size_t *len)
  */
 ssize_t get_input(info_t *info)
 {
-	static char *buf; /* the ';' command chain buffer */
+	static char *buf;
 	static size_t i, j, len;
 	ssize_t r = 0;
 	char **buf_p = &(info->arg), *p;
@@ -67,7 +67,7 @@ ssize_t get_input(info_t *info)
 		check_chain(info, buf, &j, i, len);
 		while (j < len) /* iterate to semicolon or end */
 		{
-			if (is_chain(info, buf, &j))
+			if (chain_of_cmd(info, buf, &j))
 				break;
 			j++;
 		}

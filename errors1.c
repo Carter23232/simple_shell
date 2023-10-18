@@ -57,7 +57,7 @@ int print_d(int input, int fd)
 {
 	int (*__putchar)(char) = _putchar;
 	int i, count = 0;
-	unsigned int _abs_, current;
+	unsigned int _abs_, cur;
 
 	if (fd == STDERR_FILENO)
 		__putchar = _eputchar;
@@ -69,17 +69,17 @@ int print_d(int input, int fd)
 	}
 	else
 		_abs_ = input;
-	current = _abs_;
+	cur = _abs_;
 	for (i = 1000000000; i > 1; i /= 10)
 	{
 		if (_abs_ / i)
 		{
-			__putchar('0' + current / i);
+			__putchar('0' + cur / i);
 			count++;
 		}
-		current %= i;
+		cur %= i;
 	}
-	__putchar('0' + current);
+	__putchar('0' + cur);
 	count++;
 
 	return (count);
@@ -95,8 +95,8 @@ int print_d(int input, int fd)
  */
 char *convert_number(long int num, int base, int flags)
 {
-	static char *array;
-	static char buffer[50];
+	static char *arr;
+	static char buf[50];
 	char sign = 0;
 	char *ptr;
 	unsigned long n = num;
@@ -107,12 +107,12 @@ char *convert_number(long int num, int base, int flags)
 		sign = '-';
 
 	}
-	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buffer[49];
+	arr = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buf[49];
 	*ptr = '\0';
 
 	do	{
-		*--ptr = array[n % base];
+		*--ptr = arr[n % base];
 		n /= base;
 	} while (n != 0);
 

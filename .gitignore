@@ -3,3 +3,6 @@
 allowed_functions
 CMakeLists.txt
 runchecker.bash
+/.idea
+.gitignore
+hsh
