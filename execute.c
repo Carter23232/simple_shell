@@ -59,9 +59,9 @@ int execute(int ac, char **argv, char **env)
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
 	{
-		if (!trailing_space((com_info->input)))
+		com_info->buf = removeSpacesFromStr(com_info->input.buf);
+		if (_strlen(com_info->buf) > 0)
 		{
-			com_info->buf = removeSpacesFromStr(com_info->input.buf);
 			token(&(com_info->arr), com_info->buf, ' ');
 			com_info->child = -1;
 			if (!(built_in(com_info, argv)))

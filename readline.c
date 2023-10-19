@@ -30,7 +30,7 @@ d_ret get_command(void)
  */
 char *removeSpacesFromStr(char *string)
 {
-	size_t  len = _strlen(string), i, j;
+	size_t  len = _strlen(string), i = 0, j = 0;
 
 	for (i = 0 ; i < len; i++)
 	{

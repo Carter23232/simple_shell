@@ -76,7 +76,7 @@ int trailing_space(d_ret out)
 		}
 		i++;
 	}
-	if (is_space == (out.val))
+	if (is_space == _strlen(out.buf))
 		return (1);
 	return (0);
 }
