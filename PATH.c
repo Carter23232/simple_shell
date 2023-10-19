@@ -52,7 +52,7 @@ char *get_path(char *input, char **env)
 		return ((char *)input);
 
 	var_path = _getenv(env, "PATH").buf;
-	if (var_path == NULL)
+	if (var_path == NULL || (_strlen(var_path) == 0))
 		return ((char *)input);
 
 	token(&func_path, var_path, ':');
