@@ -14,7 +14,7 @@ int _env(char **env_var)
 		return (0);
 	while (env_var[i] != NULL)
 	{
-		total_output += _puts("%s\n", env_var[i], NULL);
+		total_output += _puts(env_var[i], "\n", NULL);
 		i++;
 	}
 	return (total_output);

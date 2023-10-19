@@ -142,7 +142,7 @@ int _puts(char *msg1, char *msg2, char *msg3)
 
 	while (msg2[j] != '\0')
 	{
-		write(STDOUT_FILENO, &msg2[i], 1);
+		write(STDOUT_FILENO, &msg2[j], 1);
 		j++, total_output++;
 	}
 	if (msg3 == NULL)
@@ -150,7 +150,7 @@ int _puts(char *msg1, char *msg2, char *msg3)
 
 	while (msg3[k] != '\0')
 	{
-		write(STDOUT_FILENO, &msg3[i], 1);
+		write(STDOUT_FILENO, &msg3[k], 1);
 		k++, total_output++;
 	}
 
