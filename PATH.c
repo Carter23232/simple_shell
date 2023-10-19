@@ -71,7 +71,7 @@ char *get_path(char *input, char **env)
 			if (_strcmp(input, entry->d_name) == 0)
 			{
 				len_arr = (_strlen(func_path[i]));
-				path = malloc(sizeof(char) * (len_arr + 1));
+				path = malloc(sizeof(char) * (len_arr + 2 + _strlen(input)));
 				if (path == NULL)
 				{
 					free(path);
@@ -79,7 +79,7 @@ char *get_path(char *input, char **env)
 				}
 				_strcpy(path, func_path[i]), _strcat(path, "/"),
 				_strcat(path, (char *)input);
-				free(input), free_str_arr(func_path);
+				free(var_path), free(input), free_str_arr(func_path);
 				closedir(dir);
 				return (path);
 			}
