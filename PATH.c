@@ -38,7 +38,7 @@ void arg_ind_zero(char **input, char **env)
  * get_path - gets the path of a given test if exist
  * @input: string to lookup
  * @env : environment variable
- * Return: path to the file if found
+ * Return: path to the file if found.
  */
 char *get_path(char *input, char **env)
 {
