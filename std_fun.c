@@ -57,3 +57,34 @@ int _strlen(const char *s)
 	return (len);
 }
 
+/**
+ * convt_str_to_arr - converts strings to array
+ * @str1: string 1
+ * @str2: string 2
+ * @str3: string 3
+ * Return: array of strings
+ */
+char **convt_str_to_arr(char *str1, char *str2, char *str3)
+{
+	char **arr;
+
+	if (str1 == NULL && str2 == NULL)
+		return (NULL);
+	arr = malloc(sizeof(char *) * 4);
+	if (arr != NULL)
+	{
+		arr[0] = malloc(sizeof(char) * (_strlen(str1) + 1));
+		if (arr[0] != NULL)
+			_strcpy(arr[0], str1);
+
+		arr[1] = malloc(sizeof(char) * (_strlen(str2) + 1));
+		if (arr[1] != NULL)
+			_strcpy(arr[1], str2);
+
+		arr[2] = malloc(sizeof(char) * (_strlen(str3) + 1));
+		if (arr[2] != NULL)
+			_strcpy(arr[2], str3);
+	}
+	arr[3] = NULL;
+	return (arr);
+}

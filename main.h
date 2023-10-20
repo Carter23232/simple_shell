@@ -75,4 +75,5 @@ void change_d(const char **arr, char **previous_dir, char *env[]);
 int  built_in(info *com_info, char **argv);
 int trailing_space(d_ret out);
 char **copy_env_var(char **env);
+char **convt_str_to_arr(char *str1, char *str2, char *str3);
 #endif
