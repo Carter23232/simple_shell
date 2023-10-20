@@ -1,34 +1,33 @@
 #include "main.h"
 /**
  * _atoi - Convert a string to an integer.
- * @s: The pointer to convert
+ * @info: input command
  * @argv: argument variable
- * @err_n: error counter
  * Return: A integer
  */
-int _atoi(const char **s, char *argv, int *err_n)
+int _atoi(info *info, char argv[])
 {
 	int index = 0, no = 0, min = 1, mx = 0;
 
-	while (s[index])
+	while (info->arr[index])
 	{
-		if (s[1][index] == '-' || !(s[1][index] >= '0' && s[1][index] <= '9'))
+		if  (info->arr[1][index] == '-' || !(info->arr[1][index] >= '0' && info->arr[1][index] <= '9'))
 		{
-			(*err_n)++;
-			_E_puts(argv, ": ", int_str(*err_n));
-			_E_puts(": ", (char *)s[0], ": Illegal number: ");
-			_E_puts((char *)s[1], "\n", NULL);
+			(info->num_E)++;
+			_E_puts(argv, ": ", int_str(info->num_E));
+			_E_puts(": ", (char *)info->arr[0], ": Illegal number: ");
+			_E_puts((char *)info->arr[1], "\n", NULL);
 			return (2);
 		}
-		if (s[1][index] == 45)
+		if (info->arr[1][index] == 45)
 		{
 			min *= -1;
 		}
 
-		while (s[1][index] >= 48 && s[1][index] <= 57)
+		while (info->arr[1][index] >= 48 && info->arr[1][index] <= 57)
 		{
 			mx = 1;
-			no = (no * 10) + (s[1][index] - '0');
+			no = (no * 10) + (info->arr[1][index] - '0');
 			index++;
 		}
 
