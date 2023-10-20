@@ -128,7 +128,10 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	}
 
 	else if (_strcmp(arr[1], "-") == 0)
+	{
 		d_changed = chdir(*pr_dr);
+		_puts(*pr_dr, "\n", NULL);
+	}
 	else
 	{
 		*pr_dr = _getenv(ev, "PWD").buf;
