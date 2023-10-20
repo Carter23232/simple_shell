@@ -12,7 +12,8 @@ int  built_in(info *com_info, char **argv)
 	{
 		if ((com_info->arr)[1] != NULL)
 			com_info->status = _atoi(com_info, argv[0]);
-		free_info(com_info);
+		free_str_arr(com_info->arr), free(com_info->buf), free(com_info->prv_dir);
+		free_str_arr(com_info->env_dup);
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "env") == 0)
@@ -40,19 +41,18 @@ int  built_in(info *com_info, char **argv)
  * @argv : argument variable
  * Return: exit status value
  */
-int execute(int ac, char **argv, char **env)
-{
-	info com_info[] = { INFO_INIT };
+int execute(int ac, char **argv, char **env) {
+	info com_info[] = {INFO_INIT};
 
+	(void) ac;
+	com_info->prv_dir = _getenv(env, "PWD").buf, copy_env_var(com_info, env);
+	com_info->input.buf = NULL, com_info->input.val = 0;
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
 	{
 		com_info->buf = removeSpacesFromStr(com_info->input.buf);
 		if (_strlen(com_info->buf) > 0)
 		{
-			if (!com_info->env_edited)
-				copy_env_var(com_info, env);
-			com_info->prv_dir = _getenv(env, "PWD").buf;
 			token(&(com_info->arr), com_info->buf, ' ');
 			com_info->child = -1;
 			if (!(built_in(com_info, argv)))
@@ -77,9 +77,15 @@ int execute(int ac, char **argv, char **env)
 					/* Set return status to child's exit status */
 					com_info->status = WEXITSTATUS(com_info->status);
 			}
-			free_info(com_info);
+			free_str_arr(com_info->arr), free(com_info->buf), free(com_info->no);
+			if (!com_info->env_edited)
+				free_str_arr(com_info->env_dup);
 		}
-		free(com_info->buf);
+		else
+			free_str_arr(com_info->env_dup), free(com_info->input.buf);
+		if (!com_info->env_edited)
+			copy_env_var(com_info, env);
 	}
+	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
 	return (com_info->status);
 }
