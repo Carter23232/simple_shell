@@ -110,8 +110,8 @@ free(g_var.buf);
 
 void change_d(const char **arr, char **pr_dr, char *ev[])
 {
-	char *buff, *env;
-	size_t buf_size;
+	size_t buf_size = 1024;
+	char buff[buf_size], *env, **array = NULL;
 	int d_changed;
 
 	if (arr == NULL || arr[0] == NULL)
@@ -130,9 +130,8 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	else if (_strcmp(arr[1], "-") == 0)
 	{
 		d_changed = chdir(*pr_dr);
-
+		_puts(*pr_dr, "\n", NULL);
 	}
-
 	else
 	{
 		*pr_dr = _getenv(ev, "PWD").buf;
@@ -143,13 +142,11 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 		_E_puts((char *)arr[1], ": do not exist.\n", NULL);
 	else
 	{
-		buf_size = pathconf(".", _PC_PATH_MAX);
-		buff = malloc(sizeof(char) * buf_size);
-		if (buff != NULL)
-		{
-			setenv("PWD", getcwd(buff, buf_size), 1);
-			free(buff);
-		}
+		getcwd(buff, buf_size);
+		array = convt_str_to_arr("setenv", "PWD", buff);
+		set_env(&ev, array);
+		free_str_arr(array);
+
 	}
 }
 
