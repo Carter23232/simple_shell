@@ -55,7 +55,6 @@ void free_str_arr(char **arr)
 		i++;
 	}
 	free(arr);
-	arr = NULL;
 }
 
 /**

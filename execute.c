@@ -11,25 +11,34 @@ int  built_in(info *com_info, char **argv)
 	if (_strcmp((com_info->arr)[0], "exit") == 0)
 	{
 		if ((com_info->arr)[1] != NULL)
-			com_info->status = _atoi(com_info, argv[0]);
+			com_info->status = _atoi((const char **)com_info->arr, argv[0], &(com_info->ext_err));
 		free_str_arr(com_info->arr), free(com_info->buf), free(com_info->prv_dir);
 		free_str_arr(com_info->env_dup);
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "env") == 0)
-		return (_env(com_info));
-
+	{
+		_env(com_info->env_dup);
+		return (1);
+	}
 	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
+	{
 
-		return (set_env(com_info));
-
+		com_info->env_edited = set_env(&(com_info->env_dup), com_info->arr);
+		return (1);
+	}
 	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
-
-		return (unset_env(com_info));
+	{
+		unset_env(&(com_info->env_dup), com_info->arr);
+		return (1);
+	}
 
 	else if (_strcmp((com_info->arr)[0], "cd") == 0)
+	{
 
-		return (com_info->env_edited = change_d(com_info));
+		change_d((const char **)(com_info->arr), &(com_info->prv_dir), com_info->env_dup);
+		return (1);
+	}
 	return (0);
 }
 
@@ -43,18 +52,16 @@ int  built_in(info *com_info, char **argv)
  */
 int execute(int ac, char **argv, char **env)
 {
-	info com_info[] = {INFO_INIT};
+	info com_info[] = { INFO_INIT, };
 
-	(void) ac;
-	com_info->prv_dir = _getenv(env, "PWD").buf, copy_env_var(com_info, env);
+	com_info->prv_dir = _getenv(env, "PWD").buf, com_info->env_dup = copy_env_var(env);
 	com_info->input.buf = NULL, com_info->input.val = 0;
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
 	{
-
-		if (trailing_space(com_info->input))
+		com_info->buf = removeSpacesFromStr(com_info->input.buf);
+		if (_strlen(com_info->buf) > 0)
 		{
-			com_info->buf = removeSpacesFromStr(com_info->input.buf);
 			token(&(com_info->arr), com_info->buf, ' ');
 			com_info->child = -1;
 			if (!(built_in(com_info, argv)))
@@ -86,7 +93,7 @@ int execute(int ac, char **argv, char **env)
 		else
 			free_str_arr(com_info->env_dup), free(com_info->input.buf);
 		if (!com_info->env_edited)
-			copy_env_var(com_info, env);
+			com_info->env_dup = copy_env_var(env);
 	}
 	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
 	return (com_info->status);

@@ -58,12 +58,12 @@ int _strlen(const char *s)
 }
 
 /**
-* convt_str_to_arr - converts str to arr
+ * convt_str_to_arr - converts strings to array
  * @str1: string 1
  * @str2: string 2
  * @str3: string 3
- * Return: array
-*/
+ * Return: array of strings
+ */
 char **convt_str_to_arr(char *str1, char *str2, char *str3)
 {
 	char **arr;
@@ -87,33 +87,4 @@ char **convt_str_to_arr(char *str1, char *str2, char *str3)
 	}
 	arr[3] = NULL;
 	return (arr);
-}
-
-/**
- * free_info - free info variables
- * @com_info: the string to calculate the length of
- */
-void free_info(info com_info[])
-{
-	if (com_info->arr != NULL)
-		free_str_arr(com_info->arr);
-
-	if (com_info->buf != NULL)
-	{
-		free(com_info->buf);
-		com_info->buf = NULL;
-	}
-
-	if (com_info->no != NULL)
-	{
-		free(com_info->no);
-		com_info->no = NULL;
-	}
-
-	if (com_info->prv_dir != NULL)
-	{
-		free(com_info->prv_dir);
-		com_info->prv_dir = NULL;
-	}
-	com_info->input.buf = NULL;
 }
