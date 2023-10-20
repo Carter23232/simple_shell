@@ -41,7 +41,8 @@ int  built_in(info *com_info, char **argv)
  * @argv : argument variable
  * Return: exit status value
  */
-int execute(int ac, char **argv, char **env) {
+int execute(int ac, char **argv, char **env)
+{
 	info com_info[] = {INFO_INIT};
 
 	(void) ac;
