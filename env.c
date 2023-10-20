@@ -111,7 +111,7 @@ free(g_var.buf);
 void change_d(const char **arr, char **pr_dr, char *ev[])
 {
 	char *buff, *env;
-	size_t buf_size;
+	size_t buf_size = 1024;
 	int d_changed;
 
 	if (arr == NULL || arr[0] == NULL)
@@ -143,11 +143,10 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 		_E_puts((char *)arr[1], ": do not exist.\n", NULL);
 	else
 	{
-		buf_size = pathconf(".", _PC_PATH_MAX);
 		buff = malloc(sizeof(char) * buf_size);
 		if (buff != NULL)
 		{
-			setenv("PWD", getcwd(buff, buf_size), 1);
+			set_env_str(&ev, "PWD", getcwd(buff, buf_size));
 			free(buff);
 		}
 	}

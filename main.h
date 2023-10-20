@@ -69,6 +69,7 @@ void free_str_arr(char **arr);
 int get_num_of_words(char *buffer, char key);
 void ext(int status);
 int set_env(char ***env, char **arr);
+int set_env_str(char ***env, char *var, char *value);
 void unset_env(char ***environ, char **arr);
 d_ret _getenv(char *env[], char *str);
 void change_d(const char **arr, char **previous_dir, char *env[]);
