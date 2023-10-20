@@ -74,19 +74,19 @@ int set_env(char ***env, char **arr)
  * @env: pointer to env variable
  */
 
-void unset_env(char ***env, char **arr)
+int unset_env(char ***env, char **arr)
 {
 	int ac = 0, i = 0;
 	d_ret g_var;
 
 	if (arr == NULL)
-		return;
+		return (0);
 	while (arr[i] != NULL)
 		ac++, i++;
 	if (ac != 2)
 	{
 		_E_puts("Usage: unsetenv VARIABLE\n", NULL, NULL);
-		return;
+		return (0);
 	}
 	g_var = _getenv(*env, arr[1]);
 	if (g_var.buf != NULL)
@@ -98,7 +98,8 @@ void unset_env(char ***env, char **arr)
 			_strcpy((*env)[g_var.val], arr[1]), _strcat((*env)[g_var.val], "=");
 		}
 	}
-free(g_var.buf);
+	free(g_var.buf);
+	return (1);
 }
 
 /**
@@ -108,16 +109,16 @@ free(g_var.buf);
  * @ev: environment variable
  */
 
-void change_d(const char **arr, char **pr_dr, char *ev[])
+int change_d(const char **arr, char **pr_dr, char *ev[])
 {
 	char *buff, *env;
 	size_t buf_size = 1024;
-	int d_changed;
+	int d_changed = -1;
 
 	if (arr == NULL || arr[0] == NULL)
 	{
 		_E_puts("Usage: cd [DIRECTORY]\n", NULL, NULL);
-		return;
+		return (0);
 	}
 
 	if (arr[1] == NULL)
@@ -130,17 +131,20 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 	else if (_strcmp(arr[1], "-") == 0)
 	{
 		d_changed = chdir(*pr_dr);
-
+		_puts(*pr_dr, "\n", NULL);
 	}
 
 	else
 	{
-		*pr_dr = _getenv(ev, "PWD").buf;
 		d_changed = chdir(arr[1]);
+		*pr_dr = _getenv(ev, "PWD").buf;
 	}
 
 	if (d_changed != 0)
+	{
 		_E_puts((char *)arr[1], ": do not exist.\n", NULL);
+		return (0);
+	}
 	else
 	{
 		buff = malloc(sizeof(char) * buf_size);
@@ -150,6 +154,7 @@ void change_d(const char **arr, char **pr_dr, char *ev[])
 			free(buff);
 		}
 	}
+	return (1);
 }
 
 /**
