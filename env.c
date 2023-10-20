@@ -11,6 +11,7 @@ int set_env(char ***env, char **arr)
 {
 	int ac = 0, i = 0, j = 0;
 	d_ret g_var;
+
 	char **new_env = NULL;
 
 	if (arr == NULL)
