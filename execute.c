@@ -11,34 +11,24 @@ int  built_in(info *com_info, char **argv)
 	if (_strcmp((com_info->arr)[0], "exit") == 0)
 	{
 		if ((com_info->arr)[1] != NULL)
-			com_info->status = _atoi((const char **)com_info->arr, argv[0], &(com_info->ext_err));
-		free_str_arr(com_info->arr), free(com_info->buf), free(com_info->prv_dir);
-		free_str_arr(com_info->env_dup);
+			com_info->status = _atoi(com_info, argv[0]);
+		free_info(com_info);
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "env") == 0)
-	{
-		_env(com_info->env_dup);
-		return (1);
-	}
-	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
-	{
+		return (_env(com_info));
 
-		com_info->env_edited = set_env(&(com_info->env_dup), com_info->arr);
-		return (1);
-	}
+	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
+
+		return (set_env(com_info));
+
 	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
-	{
-		com_info->env_edited = unset_env(&(com_info->env_dup), com_info->arr);
-		return (1);
-	}
+
+		return (unset_env(com_info));
 
 	else if (_strcmp((com_info->arr)[0], "cd") == 0)
-	{
 
-		com_info->env_edited = change_d((const char **)(com_info->arr), &(com_info->prv_dir), com_info->env_dup);
-		return (1);
-	}
+		return (com_info->env_edited = change_d(com_info));
 	return (0);
 }
 
@@ -52,16 +42,17 @@ int  built_in(info *com_info, char **argv)
  */
 int execute(int ac, char **argv, char **env)
 {
-	info com_info[] = { INFO_INIT, };
+	info com_info[] = { INFO_INIT };
 
-	com_info->prv_dir = _getenv(env, "PWD").buf, com_info->env_dup = copy_env_var(env);
-	com_info->input.buf = NULL, com_info->input.val = 0;
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
 	{
 		com_info->buf = removeSpacesFromStr(com_info->input.buf);
 		if (_strlen(com_info->buf) > 0)
 		{
+			if (!com_info->env_edited)
+				copy_env_var(com_info, env);
+			com_info->prv_dir = _getenv(env, "PWD").buf;
 			token(&(com_info->arr), com_info->buf, ' ');
 			com_info->child = -1;
 			if (!(built_in(com_info, argv)))
@@ -86,15 +77,9 @@ int execute(int ac, char **argv, char **env)
 					/* Set return status to child's exit status */
 					com_info->status = WEXITSTATUS(com_info->status);
 			}
-			free_str_arr(com_info->arr), free(com_info->buf), free(com_info->no);
-			if (!com_info->env_edited)
-				free_str_arr(com_info->env_dup);
+			free_info(com_info);
 		}
-		else
-			free_str_arr(com_info->env_dup), free(com_info->input.buf);
-		if (!com_info->env_edited)
-			com_info->env_dup = copy_env_var(env);
+		free(com_info->buf);
 	}
-	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
 	return (com_info->status);
 }
