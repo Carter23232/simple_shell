@@ -18,7 +18,7 @@ int _atoi(const char **s, char *argv, int *err_n)
 			_E_puts(argv, ": ", int_str(*err_n));
 			_E_puts(": ", (char *)s[0], ": Illegal number: ");
 			_E_puts((char *)s[1], "\n", NULL);
-			return (*err_n);
+			return (2);
 		}
 		if (s[1][index] == 45)
 		{
