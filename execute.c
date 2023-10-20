@@ -29,14 +29,14 @@ int  built_in(info *com_info, char **argv)
 	}
 	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
 	{
-		unset_env(&(com_info->env_dup), com_info->arr);
+		com_info->env_edited = unset_env(&(com_info->env_dup), com_info->arr);
 		return (1);
 	}
 
 	else if (_strcmp((com_info->arr)[0], "cd") == 0)
 	{
 
-		change_d((const char **)(com_info->arr), &(com_info->prv_dir), com_info->env_dup);
+		com_info->env_edited = change_d((const char **)(com_info->arr), &(com_info->prv_dir), com_info->env_dup);
 		return (1);
 	}
 	return (0);
