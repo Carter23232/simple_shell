@@ -48,14 +48,13 @@ typedef struct info
 	int num_E;
 	int ext_err;
 	int env_edited;
-	int env_full;
 	d_ret input;
 
 }info;
 #define D_RET_INIT \
 {NULL, 0}
 #define INFO_INIT \
-{NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, D_RET_INIT}
+{NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, D_RET_INIT}
 
 d_ret get_command(void);
 char **token(char ***sorted_array, char *buffer, char key);
@@ -69,16 +68,12 @@ void arg_ind_zero(char **input, char **env);
 void free_str_arr(char **arr);
 int get_num_of_words(char *buffer, char key);
 void ext(int status);
-int set_env(info info[]);
-int set_env_str(info *info, char *var, char *value);
-int unset_env(info *info);
+int set_env(char ***env, char **arr);
+void unset_env(char ***environ, char **arr);
 d_ret _getenv(char *env[], char *str);
-int change_d(info info[]);
-int _atoi(info *info, char arg[]);
-int _env(info info[]);
+void change_d(const char **arr, char **previous_dir, char *env[]);
 int  built_in(info *com_info, char **argv);
 int trailing_space(d_ret out);
-void copy_env_var(info *info ,char **env);
+char **copy_env_var(char **env);
 char **convt_str_to_arr(char *str1, char *str2, char *str3);
-void free_info (info *com_info);
 #endif
