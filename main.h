@@ -81,6 +81,6 @@ int trailing_space(d_ret out);
 void copy_env_var(info *info ,char **env);
 char **convt_str_to_arr(char *str1, char *str2, char *str3);
 void free_info (info *com_info);
-void preset_info(info com_info[], char **env);
+void preset_info(info com_info[]);
 int pwd(info info[]);
 #endif

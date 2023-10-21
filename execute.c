@@ -3,9 +3,8 @@
 /**
  * preset_info - handles built in functions
  * @com_info : command infos
- * @env : env variables
  */
-void preset_info(info com_info[], char **env)
+void preset_info(info com_info[])
 {
 	com_info->buf = removeSpacesFromStr(com_info->input.buf);
 	token(&(com_info->arr), com_info->buf, ' ');
@@ -62,7 +61,7 @@ int execute(int ac, char **argv, char **env)
 	{
 		if (!trailing_space(com_info->input))
 		{
-			preset_info(com_info, env);
+			preset_info(com_info);
 			if (!(built_in(com_info, argv)))
 			{
 				arg_ind_zero(com_info, com_info->env_dup);
