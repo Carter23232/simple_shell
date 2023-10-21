@@ -7,8 +7,6 @@
  */
 void preset_info(info com_info[], char **env)
 {
-	copy_env_var(com_info, env);
-	com_info->prv_dir = _getenv(com_info, "PWD").buf;
 	com_info->buf = removeSpacesFromStr(com_info->input.buf);
 	token(&(com_info->arr), com_info->buf, ' ');
 	com_info->child = -1;
@@ -57,6 +55,7 @@ int  built_in(info *com_info, char **argv)
 int execute(int ac, char **argv, char **env)
 {
 	info com_info[] = { INFO_INIT, };
+	copy_env_var(com_info, env), com_info->prv_dir = _getenv(com_info, "PWD").buf;
 
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
