@@ -23,7 +23,7 @@ int  built_in(info *com_info, char **argv)
 	{
 		if ((com_info->arr)[1] != NULL)
 			com_info->status = _atoi(com_info, argv[0]);
-		free_info(com_info);
+		free_info(com_info), free_str_arr(com_info->env_dup);
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "pwd") == 0)
