@@ -2,21 +2,21 @@
 
 /**
  * set_env - set environment variable
- * @arr: input string from getline
- * @env: pointer to env variable
- *Return: return 1 if succesful or 0 o/w
+ * @info: input command from getline
+ * Return: 1 if changed o/w 0
  */
 
-int set_env(char ***env, char **arr)
+
+int set_env(info info[])
 {
 	int ac = 0, i = 0, j = 0;
 	d_ret g_var;
 	char **new_env = NULL;
 
-	if (arr == NULL)
+	if (info->arr == NULL)
 		return (0);
 
-	while (arr[i] != NULL)
+	while (info->arr[i] != NULL)
 		ac++, i++;
 
 	if (ac != 3)
@@ -25,131 +25,139 @@ int set_env(char ***env, char **arr)
 		return (0);
 	}
 
-	g_var = _getenv(*env, arr[1]);
+	g_var = _getenv(info->env_dup, info->arr[1]);
 
 	if (g_var.buf != NULL)
 	{
 		free(g_var.buf);
-		(*env)[g_var.val] = malloc(sizeof(char) * (_strlen(arr[1]) + _strlen(arr[2]) + 2));
-		if ((*env)[g_var.val] != NULL)
+		(info->env_dup)[g_var.val] = malloc(sizeof(char) * (_strlen(info->arr[1]) + _strlen(info->arr[2]) + 2));
+		if ((info->env_dup)[g_var.val] != NULL)
 		{
-			_strcpy((*env)[g_var.val], arr[1]);
-			_strcat((*env)[g_var.val], "=");
-			_strcat((*env)[g_var.val], arr[2]);
+			_strcpy((info->env_dup)[g_var.val], info->arr[1]);
+			_strcat((info->env_dup)[g_var.val], "=");
+			_strcat((info->env_dup)[g_var.val], info->arr[2]);
 		}
+		info->env_edited = 1;
 	}
 	else
 	{
 		new_env = malloc(sizeof(char *) * (g_var.val + 2));
 		if (new_env != NULL)
 		{
-			while ((*env)[j] != NULL)
+			while ((info->env_dup)[j] != NULL)
 			{
-				new_env[j] = malloc(sizeof(char) * (_strlen((*env)[j]) + 1));
+				new_env[j] = malloc(sizeof(char) * (_strlen((info->env_dup)[j]) + 1));
 				if (new_env[j] != NULL)
-					_strcpy(new_env[j], (*env)[j]);
+					_strcpy(new_env[j], (info->env_dup)[j]);
 				else
 					free_str_arr(new_env);
 				j++;
 			}
 		}
-		new_env[j] = malloc(sizeof(char) * (_strlen(arr[1]) + _strlen(arr[2]) + 2));
+		new_env[j] = malloc(sizeof(char) * (_strlen(info->arr[1]) + _strlen(info->arr[2]) + 2));
 
 		if (new_env[j] != NULL)
 		{
-			_strcpy(new_env[j], arr[1]);
+			_strcpy(new_env[j], info->arr[1]);
 			_strcat(new_env[j], "=");
-			_strcat(new_env[j], arr[2]);
+			_strcat(new_env[j], info->arr[2]);
 			j++;
 		}
 		new_env[j] = NULL;
-		*env = new_env;
+		info->env_dup = new_env;
+		info->env_edited = 1;
 	}
 	return (1);
 }
 
 /**
  * unset_env - unset environment variable
- * @arr: input string from getline
- * @env: pointer to env variable
+ * @info: input command from getline
+ * Return: 1 if changed o/w 0
  */
 
-void unset_env(char ***env, char **arr)
+int unset_env(info *info)
 {
 	int ac = 0, i = 0;
 	d_ret g_var;
 
-	if (arr == NULL)
-		return;
-	while (arr[i] != NULL)
+	if (info->arr == NULL)
+		return (0);
+	while (info->arr[i] != NULL)
 		ac++, i++;
 	if (ac != 2)
 	{
 		_E_puts("Usage: unsetenv VARIABLE\n", NULL, NULL);
-		return;
+		return (0);
 	}
-	g_var = _getenv(*env, arr[1]);
+	g_var = _getenv(info->env_dup, info->arr[1]);
 	if (g_var.buf != NULL)
 	{
-		free(g_var.buf);
-		(*env)[g_var.val] = malloc(sizeof(char) * (_strlen(arr[1]) + 2));
-		if ((*env)[g_var.val] != NULL)
+		free((info->env_dup)[g_var.val]);
+		(info->env_dup)[g_var.val] = malloc(sizeof(char) * (_strlen(info->arr[1]) + 2));
+		if ((info->env_dup)[g_var.val] != NULL)
 		{
-			_strcpy((*env)[g_var.val], arr[1]), _strcat((*env)[g_var.val], "=");
+			_strcpy((info->env_dup)[g_var.val], info->arr[1]);
+			_strcat((info->env_dup)[g_var.val], "=");
 		}
+		info->env_edited = 1;
 	}
-free(g_var.buf);
+	free(g_var.buf);
+	return (1);
 }
 
 /**
  * change_d - changes directory
- * @arr: input string from getline
- * @pr_dr: stores the previous directory
- * @ev: environment variable
+ * @info: input command from getline
+ * Return: 1 if changed o/w 0
  */
 
-void change_d(const char **arr, char **pr_dr, char *ev[])
+int change_d(info info[])
 {
 	char *buff, *env;
 	size_t buf_size = 1024;
-	int d_changed;
+	int d_changed = -1;
 
-	if (arr == NULL || arr[0] == NULL)
+	if (info->arr == NULL || info->arr[0] == NULL)
 	{
 		_E_puts("Usage: cd [DIRECTORY]\n", NULL, NULL);
-		return;
+		return (0);
 	}
 
-	if (arr[1] == NULL)
+	if (info->arr[1] == NULL)
 	{
-		*pr_dr = _getenv(ev, "PWD").buf;
-		d_changed = chdir(env = _getenv(ev, "HOME").buf);
+		info->prv_dir = _getenv(info->env_dup, "PWD").buf;
+		d_changed = chdir(env = _getenv(info->env_dup, "HOME").buf);
 		free(env);
 	}
 
-	else if (_strcmp(arr[1], "-") == 0)
+	else if (_strcmp(info->arr[1], "-") == 0)
 	{
-		d_changed = chdir(*pr_dr);
-
+		d_changed = chdir(info->prv_dir);
+		_puts(info->prv_dir, "\n", NULL);
 	}
 
 	else
 	{
-		*pr_dr = _getenv(ev, "PWD").buf;
-		d_changed = chdir(arr[1]);
+		d_changed = chdir(info->arr[1]);
+		info->prv_dir = _getenv(info->env_dup, "PWD").buf;
 	}
 
 	if (d_changed != 0)
-		_E_puts((char *)arr[1], ": do not exist.\n", NULL);
+	{
+		_E_puts((char *)info->arr[1], ": do not exist.\n", NULL);
+		return (0);
+	}
 	else
 	{
 		buff = malloc(sizeof(char) * buf_size);
 		if (buff != NULL)
 		{
-			set_env_str(&ev, "PWD", getcwd(buff, buf_size));
+			set_env_str(info, "PWD", getcwd(buff, buf_size));
 			free(buff);
 		}
 	}
+	return (1);
 }
 
 /**
@@ -201,32 +209,31 @@ d_ret _getenv(char *env[], char *str)
 
 /**
  * copy_env_var - makes a copy of environmental variable
+ * @info: input cmd
  * @env: reference to environmental variables
- * Return: a duplicate of env variables or NULL if does not exist
  */
 
-char **copy_env_var(char **env)
+void copy_env_var(info *info, char **env)
 {
-	char **env_dup;
 	int num_element = 0, i = 0;
 
 	if (env == NULL)
-		return (NULL);
+		return;
 	while (env[num_element] != NULL)
 		num_element++;
 
-	env_dup = malloc(sizeof(char *) * (num_element + 1));
-	if (env_dup == NULL)
-		return (NULL);
-	while (env[i] != NULL)
+	info->env_dup = malloc(sizeof(char *) * (num_element + 1));
+
+	if (info->env_dup != NULL)
 	{
-		env_dup[i] = malloc(sizeof(char) * _strlen(env[i])  + 1);
-		if (env_dup[i] != NULL)
-			_strcpy(env_dup[i], env[i]);
-		i++;
-
-
+		while (env[i] != NULL)
+		{
+			info->env_dup[i] = malloc(sizeof(char) * _strlen(env[i]) + 1);
+			if (info->env_dup[i] != NULL)
+				_strcpy(info->env_dup[i], env[i]);
+			i++;
+		}
+		info->env_full = 1;
 	}
-	env_dup[i] = NULL;
-	return (env_dup);
+	info->env_dup[i] = NULL;
 }

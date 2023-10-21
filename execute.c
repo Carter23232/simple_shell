@@ -11,32 +11,32 @@ int  built_in(info *com_info, char **argv)
 	if (_strcmp((com_info->arr)[0], "exit") == 0)
 	{
 		if ((com_info->arr)[1] != NULL)
-			com_info->status = _atoi((const char **)com_info->arr, argv[0], &(com_info->ext_err));
+			com_info->status = _atoi(com_info, argv[0]);
 		free_str_arr(com_info->arr), free(com_info->buf), free(com_info->prv_dir);
 		free_str_arr(com_info->env_dup);
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "env") == 0)
 	{
-		_env(com_info->env_dup);
+		_env(com_info);
 		return (1);
 	}
 	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
 	{
 
-		com_info->env_edited = set_env(&(com_info->env_dup), com_info->arr);
+		com_info->env_edited = set_env(com_info);
 		return (1);
 	}
 	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
 	{
-		unset_env(&(com_info->env_dup), com_info->arr);
+		unset_env(com_info);
 		return (1);
 	}
 
 	else if (_strcmp((com_info->arr)[0], "cd") == 0)
 	{
 
-		change_d((const char **)(com_info->arr), &(com_info->prv_dir), com_info->env_dup);
+		change_d(com_info);
 		return (1);
 	}
 	return (0);
@@ -54,7 +54,7 @@ int execute(int ac, char **argv, char **env)
 {
 	info com_info[] = { INFO_INIT, };
 
-	com_info->prv_dir = _getenv(env, "PWD").buf, com_info->env_dup = copy_env_var(env);
+	com_info->prv_dir = _getenv(env, "PWD").buf, copy_env_var(com_info, env);
 	com_info->input.buf = NULL, com_info->input.val = 0;
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
@@ -93,7 +93,7 @@ int execute(int ac, char **argv, char **env)
 		else
 			free_str_arr(com_info->env_dup), free(com_info->input.buf);
 		if (!com_info->env_edited)
-			com_info->env_dup = copy_env_var(env);
+			copy_env_var(com_info, env);
 	}
 	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
 	return (com_info->status);
