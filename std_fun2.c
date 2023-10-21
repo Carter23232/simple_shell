@@ -11,11 +11,19 @@ int _atoi(info *info, char argv[])
 
 	while (info->arr[index])
 	{
-		if  (info->arr[1][index] == '-' || !(info->arr[1][index] >= '0' && info->arr[1][index] <= '9'))
+		if  (info->arr[1][index] == '-')
 		{
 			(info->num_E)++;
 			_E_puts(argv, ": ", int_str(info->num_E));
 			_E_puts(": ", (char *)info->arr[0], ": Illegal number: ");
+			_E_puts((char *)info->arr[1], "\n", NULL);
+			return (2);
+		}
+		if (!(info->arr[1][index] >= '0' && info->arr[1][index] <= '9'))
+		{
+			(info->num_E)++;
+			_E_puts(argv, ": ", int_str(info->num_E));
+			_E_puts(": ", (char *)info->arr[0], ": numeric argument required: ");
 			_E_puts((char *)info->arr[1], "\n", NULL);
 			return (2);
 		}

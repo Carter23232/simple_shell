@@ -17,28 +17,16 @@ int  built_in(info *com_info, char **argv)
 		ext(com_info->status);
 	}
 	else if (_strcmp((com_info->arr)[0], "env") == 0)
-	{
-		_env(com_info);
-		return (1);
-	}
-	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
-	{
+		return (_env(com_info));
 
-		com_info->env_edited = set_env(com_info);
-		return (1);
-	}
+	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
+		return (set_env(com_info));
+
 	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
-	{
-		unset_env(com_info);
-		return (1);
-	}
+		return (unset_env(com_info));
 
 	else if (_strcmp((com_info->arr)[0], "cd") == 0)
-	{
-
-		change_d(com_info);
-		return (1);
-	}
+		return (change_d(com_info));
 	return (0);
 }
 
