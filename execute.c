@@ -7,9 +7,7 @@
  */
 void preset_info(info com_info[], char **env)
 {
-
-	if (!com_info->env_edited)
-		copy_env_var(com_info, env);
+	copy_env_var(com_info, env);
 	com_info->prv_dir = _getenv(com_info, "PWD").buf;
 	com_info->buf = removeSpacesFromStr(com_info->input.buf);
 	token(&(com_info->arr), com_info->buf, ' ');
@@ -93,6 +91,8 @@ int execute(int ac, char **argv, char **env)
 		}
 		else
 			free_str_arr(com_info->env_dup), free(com_info->input.buf);
+		if (!com_info->env_edited)
+			copy_env_var(com_info, env);
 	}
 	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
 	return (com_info->status);
