@@ -20,7 +20,6 @@ int _env(info info[])
 	return (i);
 }
 
-
 /**
  * set_env_str - sets env var with given string
  * @info: component of command input
@@ -37,7 +36,7 @@ int set_env_str(info *info, char *var, char *value)
 	if (var == NULL)
 		return (0);
 
-	g_var = _getenv(info->env_dup, var);
+	g_var = _getenv(info, var);
 	if (g_var.buf != NULL)
 	{
 		free(g_var.buf);
@@ -77,4 +76,21 @@ int set_env_str(info *info, char *var, char *value)
 		info->env_dup = new_env;
 	}
 	return (1);
+}
+
+/**
+ * pwd - print current working directory
+ * @info: input cmd
+ * Return: 1 if successful o/w 0
+ */
+int pwd(info info[])
+{
+	char *var = _getenv(info, "PWD").buf;
+	if (var != NULL)
+	{
+		_puts(var, "\n", NULL);
+		free(var);
+		return (1);
+	}
+	return (0);
 }

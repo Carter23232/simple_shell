@@ -63,7 +63,8 @@ void free_str_arr(char **arr)
  * Return: 1 if succeed and 0 otherwise
  */
 
-int trailing_space(d_ret out) {
+int trailing_space(d_ret out)
+{
 	size_t i = 0;
 	size_t is_space = 0;
 

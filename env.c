@@ -25,7 +25,7 @@ int set_env(info info[])
 		return (0);
 	}
 
-	g_var = _getenv(info->env_dup, info->arr[1]);
+	g_var = _getenv(info, info->arr[1]);
 
 	if (g_var.buf != NULL)
 	{
@@ -90,7 +90,7 @@ int unset_env(info *info)
 		_E_puts("Usage: unsetenv VARIABLE\n", NULL, NULL);
 		return (0);
 	}
-	g_var = _getenv(info->env_dup, info->arr[1]);
+	g_var = _getenv(info, info->arr[1]);
 	if (g_var.buf != NULL)
 	{
 		free((info->env_dup)[g_var.val]);
@@ -126,8 +126,8 @@ int change_d(info info[])
 
 	if (info->arr[1] == NULL)
 	{
-		info->prv_dir = _getenv(info->env_dup, "PWD").buf;
-		d_changed = chdir(env = _getenv(info->env_dup, "HOME").buf);
+		info->prv_dir = _getenv(info, "PWD").buf;
+		d_changed = chdir(env = _getenv(info, "HOME").buf);
 		free(env);
 	}
 
@@ -140,7 +140,7 @@ int change_d(info info[])
 	else
 	{
 		d_changed = chdir(info->arr[1]);
-		info->prv_dir = _getenv(info->env_dup, "PWD").buf;
+		info->prv_dir = _getenv(info, "PWD").buf;
 	}
 
 	if (d_changed != 0)
@@ -155,6 +155,7 @@ int change_d(info info[])
 		{
 			set_env_str(info, "PWD", getcwd(buff, buf_size));
 			free(buff);
+			info->env_edited = 1;
 		}
 	}
 	return (1);
@@ -163,26 +164,26 @@ int change_d(info info[])
 /**
  * _getenv - get environment variable
  * @str: variable to search
- * @env: environment variable
+ * @info: command info variable
  * Return: value of variable
  */
 
-d_ret _getenv(char *env[], char *str)
+d_ret _getenv(info info[], char *str)
 {
 	d_ret env_ret;
 	int len_val = 0, i = 0, j, e = 0, size, found = 0;
 
 	env_ret.buf = NULL;
 
-	if (env == NULL)
+	if (info->env_dup == NULL)
 		return (env_ret);
 	size = _strlen(str);
-	while (env[i] != NULL)
+	while (info->env_dup[i] != NULL)
 	{
-		if (_strncmp(str, size, env[i]) == 0)
+		if (_strncmp(str, size, info->env_dup[i]) == 0)
 		{
 			j = size + 1;
-			while (env[i][j] != '\0')
+			while (info->env_dup[i][j] != '\0')
 				len_val++, j++;
 			found = 1;
 			break;
@@ -195,9 +196,9 @@ d_ret _getenv(char *env[], char *str)
 		env_ret.buf = malloc((len_val + 1) * sizeof(char));
 		if (env_ret.buf == NULL)
 			return (env_ret);
-		while (env[i][j] != '\0' && e < len_val)
+		while (info->env_dup[i][j] != '\0' && e < len_val)
 		{
-			env_ret.buf[e] = env[i][j];
+			env_ret.buf[e] = info->env_dup[i][j];
 			j++, e++;
 		}
 		env_ret.buf[len_val] = '\0';
@@ -224,16 +225,18 @@ void copy_env_var(info *info, char **env)
 
 	info->env_dup = malloc(sizeof(char *) * (num_element + 1));
 
-	if (info->env_dup != NULL)
+	if (info->env_dup == NULL)
 	{
-		while (env[i] != NULL)
-		{
-			info->env_dup[i] = malloc(sizeof(char) * _strlen(env[i]) + 1);
-			if (info->env_dup[i] != NULL)
-				_strcpy(info->env_dup[i], env[i]);
-			i++;
-		}
-		info->env_full = 1;
+		free_str_arr(info->env_dup);
+		return;
 	}
+	while (env[i] != NULL)
+	{
+		info->env_dup[i] = malloc(sizeof(char) * _strlen(env[i]) + 1);
+		if (info->env_dup[i] != NULL)
+			_strcpy(info->env_dup[i], env[i]);
+		i++;
+	}
+	info->env_full = 1;
 	info->env_dup[i] = NULL;
 }

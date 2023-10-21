@@ -2,45 +2,45 @@
 
 /**
  * test_dir - copies array of string
- * @arg: source
+ * @info: source
  * Return: 0 on success. otherwise -1
  */
-int test_dir(const char *arg)
+int test_dir(info info[])
 {
-	if (arg == NULL)
+	if (info->arr == NULL)
 		return (-1);
-	return (access(arg, F_OK));
+	return (access(info->arr[0], F_OK));
 }
 
 /**
  * arg_ind_zero - modify  index 0 of arr of str and pass as valid bash command
- * @input: string to modify
+ * @info: input command
  * @env : environment variable
  * Return: modified string
  */
-void arg_ind_zero(char **input, char **env)
+void arg_ind_zero(info info[], char **env)
 {
 	int i = 0, is_path = 0;
 
-	if (input == NULL)
+	if (info->arr == NULL)
 		return;
-	while ((*input)[i] != '\0')
+	while (info->arr[0][i] != '\0')
 	{
-		if ((*input)[i] == '/')
+		if (info->arr[0][i] == '/')
 			is_path = 1;
 		i++;
 	}
 	if (!(is_path))
-		*input = get_path(*input, env);
+		get_path(info, env);
 }
 
 /**
  * get_path - gets the path of a given test if exist
- * @input: string to lookup
+ * @info: command input
  * @env : environment variable
  * Return: path to the file if found.
  */
-char *get_path(char *input, char **env)
+void get_path(info info[], char **env)
 {
 	char **func_path = NULL;
 	char *path = NULL, *var_path;
@@ -48,12 +48,12 @@ char *get_path(char *input, char **env)
 	DIR *dir;
 	struct dirent *entry;
 
-	if (input == NULL && env == NULL)
-		return ((char *)input);
+	if (info->arr[0] == NULL && env == NULL)
+		return;
 
-	var_path = _getenv(env, "PATH").buf;
+	var_path = _getenv(info, "PATH").buf;
 	if (var_path == NULL || (_strlen(var_path) == 0))
-		return ((char *)input);
+		return;
 
 	token(&func_path, var_path, ':');
 
@@ -64,29 +64,33 @@ char *get_path(char *input, char **env)
 		{
 			free_str_arr(func_path);
 			closedir(dir);
-			return (NULL);
+			return;
 		}
 		while ((entry = readdir(dir)) != NULL)
 		{
-			if (_strcmp(input, entry->d_name) == 0)
+			if (_strcmp(info->arr[0], entry->d_name) == 0)
 			{
-				len_arr = (_strlen(func_path[i]));
-				path = malloc(sizeof(char) * (len_arr + 2 + _strlen(input)));
+				len_arr = _strlen(func_path[i]) + _strlen(info->arr[0]);
+				path = malloc(sizeof(char) * (len_arr + 2));
 				if (path == NULL)
 				{
 					free(path);
-					return ((char *)input);
+					return;
 				}
 				_strcpy(path, func_path[i]), _strcat(path, "/"),
-				_strcat(path, (char *)input);
-				free(var_path), free(input), free_str_arr(func_path);
+				_strcat(path, (char *)info->arr[0]);
+				free(info->arr[0]);
+				info->arr[0] = malloc(sizeof(char) * (len_arr + 2));
+				if (info->arr != NULL)
+					_strcpy(info->arr[0], path);
+				free(var_path), free(path), free_str_arr(func_path);
 				closedir(dir);
-				return (path);
+				return;
 			}
 		}
 		closedir(dir);
 		i++;
 	}
-	free(path), free(var_path), free_str_arr(func_path);
-	return ((char *)input);
+	free(var_path), free_str_arr(func_path);
 }
+
