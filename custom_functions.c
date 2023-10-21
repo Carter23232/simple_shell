@@ -63,20 +63,22 @@ void free_str_arr(char **arr)
  * Return: 1 if succeed and 0 otherwise
  */
 
-int trailing_space(d_ret out)
-{
+int trailing_space(d_ret out) {
 	size_t i = 0;
-	int is_space  = 0;
+	size_t is_space = 0;
+
+	if (out.buf == NULL || _strlen(out.buf) == 0)
+		return (0);
 
 	while (out.buf[i] != '\0')
 	{
 		if (out.buf[i] == ' ')
-		{
 			is_space++;
-		}
+		if (out.buf[i] == '\n' && out.buf[i + 1] != '\0')
+			is_space++;
 		i++;
 	}
-	if (is_space == _strlen(out.buf))
+	if (is_space == out.val)
 		return (1);
 	return (0);
 }
