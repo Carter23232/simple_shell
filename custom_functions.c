@@ -78,7 +78,7 @@ int trailing_space(d_ret out) {
 			is_space++;
 		i++;
 	}
-	if (is_space == out.val)
+	if (is_space == (size_t)out.val)
 		return (1);
 	return (0);
 }
