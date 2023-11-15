@@ -1,7 +1,0 @@
-allowed_functions 
-runchecker.bash
-hsh  
-cmake-build-debug
-TEST_SUITE
-CMakeLists.txt 
-.idea
