@@ -1,0 +1,3 @@
+/home/gadget/Desktop/my simple shell currently working/cmake-build-debug/CMakeFiles/New_Folder_1.dir
+/home/gadget/Desktop/my simple shell currently working/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/gadget/Desktop/my simple shell currently working/cmake-build-debug/CMakeFiles/rebuild_cache.dir
