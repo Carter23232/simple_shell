@@ -14,7 +14,9 @@ d_ret get_command(void)
 	interactive = isatty(STDIN_FILENO);
 	if (interactive)
 		_puts("$ ", NULL, NULL);
-	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin);
+
+	stream.val = (int)getline(&(stream.buf), &buffer_len, stdin); /**_strlen(test)**/
+
 	if (stream.val == -1)
 		free(stream.buf);
 	if (stream.val == -1 && interactive == 1)

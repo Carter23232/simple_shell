@@ -6,6 +6,7 @@
  */
 void preset_info(info com_info[])
 {
+	com_info->buf = removeNewlineFromStr(com_info->input.buf);
 	com_info->buf = removeSpacesFromStr(com_info->input.buf);
 	token(&(com_info->arr), com_info->buf, ' ');
 	com_info->child = -1;
@@ -59,7 +60,7 @@ int execute(int ac, char **argv, char **env)
 	(void)ac;
 	while (((com_info->input = get_command())).val != -1)
 	{
-		if (!trailing_space(com_info->input))
+		if (trailing_space(com_info->input) == 0)
 		{
 			preset_info(com_info);
 			if (!(built_in(com_info, argv)))

@@ -69,7 +69,7 @@ int trailing_space(d_ret out)
 	size_t is_space = 0;
 
 	if (out.buf == NULL || _strlen(out.buf) == 0)
-		return (0);
+		return (1);
 
 	while (out.buf[i] != '\0')
 	{
