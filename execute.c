@@ -1,97 +1,95 @@
-#include "main.h"
+/*******************************************************************************
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2014 Jean-David Gadina - www.xs-labs.com / www.digidna.net
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ ******************************************************************************/
 
-/**
- * preset_info - handles built in functions
- * @com_info : command infos
+/*!
+ * @file        main.cpp
+ * @copyright   (c) 2014 - Jean-David Gadina - www.xs-labs.com / www.digidna.net
+ * @abstract    ID3v2 test executable
  */
-void preset_info(info com_info[])
-{
-	com_info->buf = removeSpacesFromStr(com_info->input.buf);
-	token(&(com_info->arr), com_info->buf, ' ');
-	com_info->child = -1;
-}
 
-/**
- * built_in - handles built in functions
- * @com_info : command infos
- * @argv : main input args
- * Return: 1 if built in or  o/w
- */
-int  built_in(info *com_info, char **argv)
+#include <ID3v2.h>
+
+int main( void )
 {
-	if (_strcmp((com_info->arr)[0], "exit") == 0)
+	ID3v2::Tag                                      tag( "/Users/macmade/Desktop/song.mp3" );
+	ID3v2::AbstractFrame                          * frame;
+	std::vector< ID3v2::AbstractFrame * >           frames;
+	std::vector< ID3v2::AbstractFrame * >::iterator it;
+
+	if( tag.IsValid() == false )
 	{
-		if ((com_info->arr)[1] != NULL)
-			com_info->status = _atoi(com_info, argv[0]);
-		free_info(com_info), free_str_arr(com_info->env_dup);
-		ext(com_info->status);
+		std::cout << "Invalid ID3v2 file" << std::endl;
+
+		return EXIT_SUCCESS;
 	}
-	else if (_strcmp((com_info->arr)[0], "pwd") == 0)
-		return (pwd(com_info));
-
-	else if (_strcmp((com_info->arr)[0], "env") == 0)
-		return (_env(com_info));
-
-	else if (_strcmp((com_info->arr)[0], "setenv") == 0)
-		return (set_env(com_info));
-
-	else if (_strcmp((com_info->arr)[0], "unsetenv") == 0)
-		return (unset_env(com_info));
-
-	else if (_strcmp((com_info->arr)[0], "cd") == 0)
-		return (change_d(com_info));
-	return (0);
-}
-
-
-/**
- * execute - executes the program
- * @env : environment variable
- * @ac : argument counter
- * @argv : argument variable
- * Return: exit status value
- */
-int execute(int ac, char **argv, char **env)
-{
-	info com_info[] = { INFO_INIT, };
-	copy_env_var(com_info, env), com_info->prv_dir = _getenv(com_info, "PWD").buf;
-
-	(void)ac;
-	while (((com_info->input = get_command())).val != -1)
+	else
 	{
-		if (!trailing_space(com_info->input))
+		std::cout << "ID3v2 version:          " << tag.GetVersion().GetStringValue() << std::endl;
+
+		std::cout << "Unsynchronisation:      " << ( ( tag.HasFlag( ID3v2::Tag::FlagUnsynchronisation     ) ) ? "Yes" : "No" ) << std::endl;
+		std::cout << "Extended header:        " << ( ( tag.HasFlag( ID3v2::Tag::FlagExtendedHeader        ) ) ? "Yes" : "No" ) << std::endl;
+		std::cout << "Experimental indicator: " << ( ( tag.HasFlag( ID3v2::Tag::FlagExperimentalIndicator ) ) ? "Yes" : "No" ) << std::endl;
+
+		std::cout << "Header size:            " << tag.GetSize() << std::endl;
+
+		frames = tag.GetFrames();
+
+		for( it = frames.begin(); it != frames.end(); ++it )
 		{
-			preset_info(com_info);
-			if (!(built_in(com_info, argv)))
-			{
-				arg_ind_zero(com_info, com_info->env_dup);
-				if (test_dir(com_info) == 0)
-					com_info->child = fork();
-				else
-				{
-					com_info->num_E++, com_info->status = 127;
-					_E_puts(argv[0], ": ", com_info->no = int_str(com_info->num_E));
-					_E_puts(": ", com_info->buf, ": not found\n");
-				}
-				if (com_info->child == 0)
-				{
-					if (execve((com_info->arr)[0], com_info->arr, com_info->env_dup))
-						_E_puts(com_info->buf, "failed to run command .\n", NULL);
-				}
-				else
-					wait(&(com_info->status));
-				if (WIFEXITED(com_info->status))
-					com_info->status = WEXITSTATUS(com_info->status);
-			}
-			free_info(com_info);
-			if (!com_info->env_edited)
-				free_str_arr(com_info->env_dup), com_info->env_edited = 0;
+			frame = *( it );
+
+			std::cout << std::endl;
+			std::cout << "Frame: " << frame->GetName() << " (" << frame->GetDescription() << ")" << std::endl;
+			std::cout << std::endl;
+			std::cout << "    - Size:                    " << frame->GetSize() << std::endl;
+			std::cout << "    - Tag alter preservation:  " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagTagAlterPreservation  ) ) ? "No"  : "Yes" ) << std::endl;
+			std::cout << "    - File alter preservation: " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagFileAlterPreservation ) ) ? "No"  : "Yes" ) << std::endl;
+			std::cout << "    - Read only:               " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagReadOnly              ) ) ? "Yes" : "No" ) << std::endl;
+			std::cout << "    - Compression:             " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagCompression           ) ) ? "Yes" : "No" ) << std::endl;
+			std::cout << "    - Encryption:              " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagCompression           ) ) ? "Yes" : "No" ) << std::endl;
+			std::cout << "    - Grouping identity:       " << ( ( frame->HasFlag( ID3v2::AbstractFrame::FlagGroupingIdentity      ) ) ? "Yes" : "No" ) << std::endl;
 		}
-		else
-			free_str_arr(com_info->env_dup), free(com_info->input.buf);
-		if (!com_info->env_edited)
-			copy_env_var(com_info, env);
+
+		{
+			ID3v2::Frame::v23::APIC * apic;
+
+			apic = dynamic_cast< ID3v2::Frame::v23::APIC * >( tag.GetFrameWithName( "APIC" ) );
+
+			if( apic != nullptr )
+			{
+				using std::to_string;
+
+				std::cout << std::endl;
+				std::cout << "APIC:" << std::endl;
+				std::cout << "    - Text encoding:       " << static_cast< unsigned int >( apic->GetTextEncoding() ) << std::endl;
+				std::cout << "    - MIME type:           " << apic->GetMimeType() << std::endl;
+				std::cout << "    - Picture type:        " << apic->GetPictureTypeString() << std::endl;
+				std::cout << "    - Picture description: " << apic->GetPictureDescription() << std::endl;
+				std::cout << "    - Picture data size:   " << apic->GetPictureData().size() << std::endl;
+			}
+		}
 	}
-	free(com_info->prv_dir), free_str_arr(com_info->env_dup);
-	return (com_info->status);
+
+	return EXIT_SUCCESS;
 }
